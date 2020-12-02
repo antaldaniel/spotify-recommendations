@@ -1,11 +1,8 @@
 ---
 title: "Recommendation Workflow"
-output: 
-  rmarkdown::html_vignette
-vignette: >
-  %\VignetteIndexEntry{Recommendation Workflow}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
+output: rmarkdown::html_vignette
+vignette: |
+  %\VignetteIndexEntry{Recommendation Workflow} %\VignetteEngine{knitr::rmarkdown} %\VignetteEncoding{UTF-8}
 ---
 
 ```{r setup-vignette, include = FALSE}

@@ -6,18 +6,15 @@
 \usage{
 get_local_recommendations(
   user_playlist_id = "6KHw5aZWWsmRqpT7o290Mo",
-  target_nationality = "sk",
-  target_release = NULL,
+  target_country = "sk",
+  recommendation_type = "artists",
   limit = 20,
   n = 4,
   authorization = NULL
 )
 }
 \arguments{
-\item{target_nationality}{Defaults to \code{"sk"}}
-
-\item{target_release}{If recommendation should be limited to target,
-defaults to \code{NULL}}
+\item{target_country}{Defaults to \code{"sk"}}
 
 \item{limit}{Number of playlist items used for recommendation seed.}
 

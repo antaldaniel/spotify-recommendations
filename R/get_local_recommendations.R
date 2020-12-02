@@ -1,9 +1,7 @@
 #' @title Get Local Recommendations
 #'
 #' @param playlist_information A list received from get_playlist_information.
-#' @param target_nationality Defaults to \code{"sk"}
-#' @param target_release If recommendation should be limited to target,
-#' defaults to \code{NULL}
+#' @param target_country Defaults to \code{"sk"}
 #' @param limit Number of playlist items used for recommendation seed.
 #' @param n number of required target country recommendations
 #' @param authorization Defaults to \code{NULL} when
@@ -15,12 +13,12 @@
 #' @export
 
 get_local_recommendations <- function(
-  user_playlist_id = "6KHw5aZWWsmRqpT7o290Mo",
-  target_country = "sk",
-  recommendation_type = "artists",
-  limit = 20,
-  n = 4,
-  authorization = NULL) {
+    user_playlist_id = "6KHw5aZWWsmRqpT7o290Mo",
+    target_country = "sk",
+    recommendation_type = "artists",
+    limit = 20,
+    n = 4,
+    authorization = NULL) {
 
   user_playlist_info <- get_playlist_information(
     playlist_id  = user_playlist_id
@@ -40,7 +38,7 @@ get_local_recommendations <- function(
   vars_to_select <- c( "id", "name", "popularity",
                        "uri", "external_ids.isrc",
                        "release_country_code",
-                       "target_artists")
+                       "target_artists" )
 
   target_artist_ids <- get_national_artist_ids(target_nationality)
 
