@@ -16,6 +16,7 @@ initial_recommendations <- function( playlist_information,
   if (is.null(token)) token <- get_spotify_access_token()
 
   ### Artist based recommendations ------------------------------
+
   all_artists <- playlist_information$user_playlist_artists
 
   if ( length(all_artists$id) > limit ) {

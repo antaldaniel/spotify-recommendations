@@ -4,12 +4,13 @@
 \alias{upload_playlist}
 \title{Upload Playlist
 
-Get unique tracks and unique artists from a playlist in a list.}
+Upload the recommended playlist to the user's Spotify profile.}
 \usage{
 upload_playlist(
-  user_id = "rx4xjay1368opqg2i7nabuo5c",
-  playlist_name = "test",
-  playlist_description = "listen local test"
+  user_id = NULL,
+  playlist_name = "test_listen_local_playlist",
+  playlist_description = "A test playlist of the Listen Local App",
+  track_uris = NULL
 )
 }
 \arguments{
@@ -18,6 +19,8 @@ upload_playlist(
 \item{playlist_name}{Name for a new playlist}
 
 \item{playlist_description}{New description for the playlist}
+
+\item{track_uris}{The track uris of the new playlist.}
 }
 \value{
 Does not return anything.
@@ -25,5 +28,5 @@ Does not return anything.
 \description{
 Upload Playlist
 
-Get unique tracks and unique artists from a playlist in a list.
+Upload the recommended playlist to the user's Spotify profile.
 }

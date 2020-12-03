@@ -6,7 +6,7 @@
 
  Get unique tracks and unique artists from a playlist in a list.}
 \usage{
-get_playlist_information(playlist_id, token = NULL)
+get_playlist_information(playlist_id = NULL, playlist = NULL, token = NULL)
 }
 \arguments{
 \item{playlist_id}{A single Spotify playlist id}
