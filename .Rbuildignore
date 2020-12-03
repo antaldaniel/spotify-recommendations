@@ -3,3 +3,6 @@
 ^not_included$
 ^data-raw$
 ^\.httr-oauth$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$

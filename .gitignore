@@ -42,3 +42,4 @@ vignettes/*.pdf
 ^not_included
 not_included/
 inst/doc
+docs
