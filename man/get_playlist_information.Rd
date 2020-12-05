@@ -6,12 +6,19 @@
 
  Get unique tracks and unique artists from a playlist in a list.}
 \usage{
-get_playlist_information(playlist_id = NULL, playlist = NULL, token = NULL)
+get_playlist_information(
+  playlist_id = NULL,
+  playlist = NULL,
+  authorization = NULL
+)
 }
 \arguments{
 \item{playlist_id}{A single Spotify playlist id}
 
-\item{token}{Authorization token}
+\item{playlist}{A playlist querried by  \code{\link[spotifyr]{get_playlist}}.}
+
+\item{authorization}{Defaults to \code{NULL} when
+\code{get_spotify_access_token()} is invoked.}
 }
 \value{
 A list of unique tracks and unique artists from a playlist.

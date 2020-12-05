@@ -8,13 +8,18 @@ initial_recommendations(
   playlist_information,
   target_ids = NA_character_,
   limit = 20,
-  token = NULL
+  authorization = NULL
 )
 }
 \arguments{
 \item{playlist_information}{A list received from get_playlist_information.}
 
 \item{target_ids}{Spotify artists ids from the targeted repertoire.}
+
+\item{limit}{How many items are used for the initial recommendation.}
+
+\item{authorization}{Defaults to \code{NULL} when
+\code{get_spotify_access_token()} is invoked.}
 }
 \value{
 A tibble of recommendations.

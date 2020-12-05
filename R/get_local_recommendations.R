@@ -21,6 +21,9 @@ get_local_recommendations <- function(
     n = 4,
     authorization = NULL ) {
 
+  if (is.null(authorization)) {
+    authorization <- spotifyr::get_spotify_access_token()}
+
   user_playlist_info <- get_playlist_information(
     playlist_id  = user_playlist_id)
 

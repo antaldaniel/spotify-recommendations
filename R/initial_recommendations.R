@@ -2,6 +2,9 @@
 #'
 #' @param playlist_information A list received from get_playlist_information.
 #' @param target_ids Spotify artists ids from the targeted repertoire.
+#' @param limit How many items are used for the initial recommendation.
+#' @param authorization Defaults to \code{NULL} when
+#' \code{get_spotify_access_token()} is invoked.
 #' @importFrom dplyr bind_rows
 #' @importFrom spotifyr get_recommendations_all
 #' @importFrom purrr possibly
@@ -11,9 +14,9 @@
 initial_recommendations <- function( playlist_information,
                                      target_ids = NA_character_,
                                      limit = 20,
-                                     token = NULL ) {
+                                     authorization = NULL ) {
 
-  if (is.null(token)) token <- get_spotify_access_token()
+  if (is.null(authorization)) authorization <- get_spotify_access_token()
 
   ### Artist based recommendations ------------------------------
 
@@ -30,7 +33,7 @@ initial_recommendations <- function( playlist_information,
 
   recommendations_by_artists <- possible_recommendations_by_artists (
     artist_ids = all_artists$id,
-    authorization = token )
+    authorization = authorization )
 
   if ( is.null(recommendations_by_artists)) {
     warning ("No recommendation was made on the basis of original artists")

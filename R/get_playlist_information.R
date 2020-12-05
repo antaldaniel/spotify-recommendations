@@ -3,7 +3,9 @@
 #'  Get unique tracks and unique artists from a playlist in a list.
 #'
 #' @param playlist_id A single Spotify playlist id
-#' @param token Authorization token
+#' @param playlist A playlist querried by  \code{\link[spotifyr]{get_playlist}}.
+#' @param authorization Defaults to \code{NULL} when
+#' \code{get_spotify_access_token()} is invoked.
 #' @importFrom purrr map_df possibly
 #' @importFrom spotifyr get_playlist_audio_features
 #' @importFrom dplyr count group_by arrange
@@ -12,9 +14,9 @@
 
 get_playlist_information <- function( playlist_id = NULL,
                                       playlist = NULL,
-                                      token = NULL) {
+                                      authorization = NULL) {
 
-  if (is.null(token)) token <- get_spotify_access_token()
+  if (is.null(authorization)) authorization <- get_spotify_access_token()
 
   if  (!is.null(playlist_id)) {
 
@@ -22,7 +24,7 @@ get_playlist_information <- function( playlist_id = NULL,
       .f = spotifyr::get_playlist, NULL)
 
     user_playlist <- possibly_get_playlist(playlist_id = playlist_id,
-                                           authorization = token )
+                                           authorization = authorization )
     if ( is.null(user_playlist)) {
       warning("User playlist could not be read.")
       return(NULL)
@@ -30,13 +32,13 @@ get_playlist_information <- function( playlist_id = NULL,
     ## retrieving the audio features of the list
     user_playlist_features <- spotifyr::get_playlist_audio_features(
       playlist_uris = playlist_id,
-      authorization = token )
+      authorization = authorization )
 
   } else {
     user_playlist <- playlist
     user_playlist_features <- spotifyr::get_track_audio_features(
       ids = user_playlist$tracks$items$track.id,
-      authorization = token)
+      authorization = authorization)
     user_playlist_features <- bind_cols (user_playlist$tracks$items,
                                          user_playlist_features)
   }
