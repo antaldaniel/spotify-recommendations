@@ -8,6 +8,10 @@ Get the genres of the artist, if available.}
 \usage{
 get_artist_genre(user_playlist_artists)
 }
+\arguments{
+\item{user_playlist_artists}{A user_playlist_artists data frame from
+\code{\link{user_playlist_info}}}
+}
 \value{
 A tibble of artist IDs and genres in long form.
 }

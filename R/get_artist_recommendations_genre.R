@@ -2,7 +2,7 @@
 #'
 #' Get recommendations based on genre.
 #'
-#' @param artists_by_genre
+#' @param artists_by_genre A tibble created by \code{\link{get_artist_genre}}.
 #' @param target_nationality One of \code{'cz'} or \code{'sk'}.
 #' @importFrom spotifyr get_playlist_audio_features
 #' @importFrom dplyr select filter distinct full_join left_join

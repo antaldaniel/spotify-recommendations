@@ -13,15 +13,9 @@
 #' A vector containing the IDs of the tracks you'd like recommendations for
 #' @param valence
 #' The target valence for the recommendations
-#'
+#' @importFrom spotifyr get_recommendations_all
 #' @return
 #' Returns a data frame containing recommendations from the Spotify API
 #' @export
-#'
-#' @examples
-#' @importFrom spotifyr get_recommendations_all
-#' \dontrun{
-#' get_recommendations_all(c("5VIpLopHgolKcSSj7JPCMA", "3QRGYDFFUVb4qneE4DX1gR"))
-#' }
 
 get_recommendations_all <- spotifyr::get_recommendations_all

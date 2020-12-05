@@ -1,12 +1,11 @@
 Package: spotifyrecommendations
 Type: Package
 Title: Listen Local Recommendations On Spotify
-Version: 0.1.0
+Version: 0.1.1
 Author: Daniel Antal
 Maintainer: Daniel Antal <daniel.antal@dataobservatory.eu>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+Description: An experimental recommendation system that suggests a partly locally 
+    relevant playlist on the basis of a user playlist on Spotify.
 Encoding: UTF-8
 LazyData: true
 Imports: 

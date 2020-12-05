@@ -9,6 +9,8 @@ Get recommendations based on genre.}
 get_artist_recommendations_genre(artists_by_genre, target_nationality = "sk")
 }
 \arguments{
+\item{artists_by_genre}{A tibble created by \code{\link{get_artist_genre}}.}
+
 \item{target_nationality}{One of \code{'cz'} or \code{'sk'}.}
 }
 \value{

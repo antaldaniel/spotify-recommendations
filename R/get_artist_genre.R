@@ -2,7 +2,8 @@
 #'
 #' Get the genres of the artist, if available.
 #'
-#' @param user_playlist_artists
+#' @param user_playlist_artists A user_playlist_artists data frame from
+#' \code{\link{user_playlist_info}}
 #' @importFrom spotifyr get_playlist_audio_features
 #' @importFrom dplyr select filter distinct full_join left_join
 #' @importFrom dplyr slice_head group_by ungroup arrange
