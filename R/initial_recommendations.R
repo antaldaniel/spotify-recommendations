@@ -14,6 +14,7 @@
 initial_recommendations <- function( playlist_information,
                                      target_ids = NA_character_,
                                      limit = 20,
+                                     silent = TRUE,
                                      authorization = NULL ) {
 
   if (is.null(authorization)) authorization <- get_spotify_access_token()
@@ -69,7 +70,11 @@ initial_recommendations <- function( playlist_information,
     )
     recommendations_by_artists$target_artists <- rec_by_artists
   } else {
-    warning ("No recommendation was made on the basis of original artists.")
+
+    if (!silent) {
+      warning ("No recommendation was made on the basis of original artists.")
+    }
+
   }
 
   if ( ! is.null(recommendations_by_tracks)) {
@@ -86,7 +91,10 @@ initial_recommendations <- function( playlist_information,
 
     recommendations_by_tracks$target_artists <- rec_by_tracks
   } else {
-    warning ("No recommendation was made on the basis of original tracks.")
+    if ( !silent) {
+      warning ("No recommendation was made on the basis of original tracks.")
+
+    }
   }
 
   ## Combination of recommendations --------------------------------

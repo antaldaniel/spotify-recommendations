@@ -19,6 +19,7 @@ get_local_recommendations <- function(
     recommendation_type = "artists",
     limit = 20,
     n = 4,
+    silent = TRUE,
     authorization = NULL ) {
 
   if (is.null(authorization)) {
@@ -49,7 +50,9 @@ get_local_recommendations <- function(
   initial_user_recommendations <- initial_recommendations(
     playlist_information = user_playlist_info ,
     target_ids = target_artist_ids,
-    limit = limit )
+    limit = limit,
+    silent = silent,
+    authorization = authorization )
 
   local_recommendations <- initial_user_recommendations
 
@@ -74,7 +77,8 @@ get_local_recommendations <- function(
 
   recommended_by_artist_similarity <- get_local_artist_recommendations(
     user_playlist_artists = user_playlist_info$user_playlist_artists,
-    n = n
+    n = n,
+    authorization = authorization
   )
 
   local_recommendations_by_artist <- get_track_recommendations_artist(
@@ -105,7 +109,8 @@ get_local_recommendations <- function(
   local_recommendations_by_genre <- get_track_recommendations_artist(
     spotify_artist_id = recommended_by_genre,
     target_nationality = target_nationality,
-    n = n)
+    n = n,
+    authorization = authorization )
 
   local_recommendations_3 <- local_recommendations_by_genre %>%
     select ( all_of (vars_to_select)) %>%

@@ -10,6 +10,7 @@ get_local_recommendations(
   recommendation_type = "artists",
   limit = 20,
   n = 4,
+  silent = TRUE,
   authorization = NULL
 )
 }
