@@ -20,7 +20,7 @@ get_track_recommendations_artist <- function ( spotify_artist_id,
                                                n = 5,
                                                authorization = NULL) {
 
-  if (is.null(token)) token <- get_spotify_access_token()
+  if (is.null(authorization)) authorization <- get_spotify_access_token()
 
   data("listen_local_artists", envir=environment())
 
@@ -31,7 +31,7 @@ get_track_recommendations_artist <- function ( spotify_artist_id,
   get_top_tracks <- function (artist_id) {
     top_tracks <- purrr::possibly(
       .f = get_artist_top_tracks, NULL)(artist_id,
-                                        authorization = token)
+                                        authorization = authorization)
 
     fn_detect_artists <- function(x) {
       ifelse ( any (x %in% target_artists), TRUE, FALSE)
