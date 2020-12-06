@@ -18,7 +18,7 @@ get_playlist_information(
 \item{playlist}{A playlist querried by  \code{\link[spotifyr]{get_playlist}}.}
 
 \item{authorization}{Defaults to \code{NULL} when
-\code{get_spotify_access_token()} is invoked.}
+\code{\link[spotifyr]{get_spotify_access_token()}} is invoked.}
 }
 \value{
 A list of unique tracks and unique artists from a playlist.

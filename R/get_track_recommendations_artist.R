@@ -14,11 +14,12 @@
 #' @return A tibble of recommendations.
 #' @export
 
-get_track_recommendations_artist <- function ( spotify_artist_id,
-                                               target_nationality = "sk",
-                                               target_release = NULL,
-                                               n = 5,
-                                               authorization = NULL) {
+get_track_recommendations_artist <- function (
+     spotify_artist_id,
+     target_nationality = "sk",
+     target_release = NULL,
+     n = 5,
+     authorization = NULL) {
 
   if (is.null(authorization)) authorization <- get_spotify_access_token()
 
@@ -29,15 +30,18 @@ get_track_recommendations_artist <- function ( spotify_artist_id,
     }
 
   get_top_tracks <- function (artist_id) {
+
     top_tracks <- purrr::possibly(
       .f = get_artist_top_tracks, NULL)(artist_id,
                                         authorization = authorization)
 
+    message ( artist_id )
     fn_detect_artists <- function(x) {
       ifelse ( any (x %in% target_artists), TRUE, FALSE)
     }
 
   if (is.null(top_tracks)) return(top_tracks)
+  if (length ( top_tracks )==0)return(top_tracks)
 
   if (!is.null(target_release)) {
       top_tracks <- top_tracks %>% mutate (
@@ -61,6 +65,10 @@ get_track_recommendations_artist <- function ( spotify_artist_id,
     }
 
   }
+
+  #sample_ids <- sample ( spotify_artist_id, n )
+  #for ( i in 1:6 ) { get_top_tracks(artist_id = sample_ids[i] ) }
+  #for debugging. Some artists have zero top tracks
   tmp <- lapply ( sample ( spotify_artist_id, n ), get_top_tracks)
 
   recommendations <- do.call ( rbind, tmp ) %>%

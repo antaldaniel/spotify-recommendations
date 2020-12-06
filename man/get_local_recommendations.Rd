@@ -22,7 +22,7 @@ get_local_recommendations(
 \item{n}{number of required target country recommendations}
 
 \item{authorization}{Defaults to \code{NULL} when
-\code{get_spotify_access_token()} is invoked.}
+\code{\link[spotifyr]{get_spotify_access_token()}} is invoked.}
 
 \item{playlist_information}{A list received from
 \code{\link{get_playlist_information}}.}

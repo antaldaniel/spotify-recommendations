@@ -6,7 +6,7 @@
 #' @param limit Number of playlist items used for recommendation seed.
 #' @param n number of required target country recommendations
 #' @param authorization Defaults to \code{NULL} when
-#' \code{get_spotify_access_token()} is invoked.
+#' \code{\link[spotifyr]{get_spotify_access_token()}} is invoked.
 #' @importFrom dplyr bind_rows ungroup filter select sample_n
 #' @importFrom tidyselect all_of
 #' @importFrom spotifyr get_spotify_access_token
@@ -27,7 +27,6 @@ get_local_recommendations <- function(
 
   user_playlist_info <- get_playlist_information(
     playlist_id  = user_playlist_id)
-
 
   if (recommendation_type == 'artists') {
     target_nationality <- "sk"

@@ -10,7 +10,8 @@ upload_playlist(
   user_id = NULL,
   playlist_name = "test_listen_local_playlist",
   playlist_description = "A test playlist of the Listen Local App",
-  track_uris = NULL
+  track_uris = NULL,
+  authorization = NULL
 )
 }
 \arguments{
@@ -21,6 +22,9 @@ upload_playlist(
 \item{playlist_description}{New description for the playlist}
 
 \item{track_uris}{The track uris of the new playlist.}
+
+\item{authorization}{Defaults to \code{NULL} when
+\code{\link[spotifyr]{get_spotify_access_token()}} is invoked.}
 }
 \value{
 Does not return anything.

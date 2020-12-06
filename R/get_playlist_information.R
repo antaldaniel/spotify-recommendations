@@ -5,7 +5,7 @@
 #' @param playlist_id A single Spotify playlist id
 #' @param playlist A playlist querried by  \code{\link[spotifyr]{get_playlist}}.
 #' @param authorization Defaults to \code{NULL} when
-#' \code{get_spotify_access_token()} is invoked.
+#' \code{\link[spotifyr]{get_spotify_access_token()}} is invoked.
 #' @importFrom purrr map_df possibly
 #' @importFrom spotifyr get_playlist_audio_features
 #' @importFrom dplyr count group_by arrange
