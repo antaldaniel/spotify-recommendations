@@ -5,7 +5,7 @@
 \alias{artist_distances}
 \title{Artist Distances}
 \format{
-A data frame with 49094 rows and 4 variables:
+A data frame with 118981 rows and 4 variables:
 \describe{
   \item{spotify_artist_id}{Spotify Artist ID}
   \item{recommendation}{Recommendation based on spotify_artist_id}
