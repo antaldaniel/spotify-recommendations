@@ -18,6 +18,7 @@ initial_recommendations <- function( playlist_information,
                                      authorization = NULL ) {
 
   if (is.null(authorization)) authorization <- get_spotify_access_token()
+  . <- exteranl_ids.isrc <- NULL
 
   ### Artist based recommendations ------------------------------
 

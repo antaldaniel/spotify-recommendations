@@ -11,6 +11,7 @@
 #' @importFrom tidyselect all_of
 #' @importFrom purrr possibly
 #' @importFrom spotifyr get_spotify_access_token
+#' @importFrom stats data complete.cases
 #' @return A tibble of recommendations.
 #' @export
 
@@ -22,6 +23,7 @@ get_track_recommendations_artist <- function (
      authorization = NULL) {
 
   if (is.null(authorization)) authorization <- get_spotify_access_token()
+  . <- target_nationality <- external_ids.isrc <- release_country <- NULL
 
   data("listen_local_artists", envir=environment())
 
