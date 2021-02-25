@@ -1,4 +1,4 @@
-#' @title Upload Playlist
+#' Upload Playlist
 #'
 #' Upload the recommended playlist to the user's Spotify profile.
 #'
@@ -7,7 +7,7 @@
 #' @param playlist_description New description for the playlist
 #' @param track_uris The track uris of the new playlist.
 #' @param authorization Defaults to \code{NULL} when
-#' \code{\link[spotifyr]{get_spotify_access_token()}} is invoked.
+#' \code{\link[spotifyr]{get_spotify_access_token}} is invoked.
 #' @importFrom spotifyr get_user_playlists add_tracks_to_playlist
 #' @importFrom dplyr filter
 #' @return Does not return anything.

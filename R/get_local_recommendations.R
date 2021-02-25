@@ -7,7 +7,13 @@
 #' or \code{'both'}.
 #' @param limit Number of playlist items used for recommendation seed.
 #' @param silent Defaults to \code{TRUE}.
-#' @param data_path If \code{NULL}, the functions try to load the data from the
+#' @param listen_local_artist_data If \code{NULL}, the functions try to load the data from the
+#' spotifyrecommendations package.
+#' @param local_genre_table_path If \code{NULL}, the functions try to load the data from the
+#' spotifyrecommendations package.
+#' @param artist_distance_data If \code{NULL}, the functions try to load the data from the
+#' spotifyrecommendations package.
+#' @param artist_genre_table_path If \code{NULL}, the functions try to load the data from the
 #' spotifyrecommendations package.
 #' @importFrom dplyr bind_rows ungroup filter select sample_n
 #' @importFrom tidyselect all_of any_of

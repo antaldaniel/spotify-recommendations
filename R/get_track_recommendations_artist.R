@@ -69,20 +69,18 @@ get_track_recommendations_artist <- function (
 
   }
 
-
-
   tmp <- lapply ( sample ( spotify_artist_id, n_rec ), get_top_tracks)
 
   recommendations <- do.call ( rbind, tmp ) %>%
     distinct ( .data$external_ids.isrc, .keep_all = TRUE ) %>%
-    mutate ( release_country_code = get_release_country(.data$external_ids.isrc),
-             )
+    mutate ( release_country_code = get_release_country(.data$external_ids.isrc) )
 
   recommendations %>%
       mutate (
-        target_artists = ifelse (is.null(.data$target_nationality),
-                                     TRUE,
-                                     spotify_artist_id %in% get_national_artist_ids(.data$target_nationlity))
+        target_artists = ifelse (test = is.null(.data$target_nationality),
+                                 yes  = TRUE,
+                                 no   = spotify_artist_id %in% get_national_artist_ids(.data$target_nationlity)
+                                 )
       )
 
 }

@@ -36,7 +36,16 @@ or \code{'both'}.}
 
 \item{silent}{Defaults to \code{TRUE}.}
 
-\item{data_path}{If \code{NULL}, the functions try to load the data from the
+\item{listen_local_artist_data}{If \code{NULL}, the functions try to load the data from the
+spotifyrecommendations package.}
+
+\item{artist_distance_data}{If \code{NULL}, the functions try to load the data from the
+spotifyrecommendations package.}
+
+\item{local_genre_table_path}{If \code{NULL}, the functions try to load the data from the
+spotifyrecommendations package.}
+
+\item{artist_genre_table_path}{If \code{NULL}, the functions try to load the data from the
 spotifyrecommendations package.}
 }
 \value{

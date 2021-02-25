@@ -2,9 +2,7 @@
 % Please edit documentation in R/upload_playlist.R
 \name{upload_playlist}
 \alias{upload_playlist}
-\title{Upload Playlist
-
-Upload the recommended playlist to the user's Spotify profile.}
+\title{Upload Playlist}
 \usage{
 upload_playlist(
   user_id = NULL,
@@ -24,13 +22,11 @@ upload_playlist(
 \item{track_uris}{The track uris of the new playlist.}
 
 \item{authorization}{Defaults to \code{NULL} when
-\code{\link[spotifyr]{get_spotify_access_token()}} is invoked.}
+\code{\link[spotifyr]{get_spotify_access_token}} is invoked.}
 }
 \value{
 Does not return anything.
 }
 \description{
-Upload Playlist
-
 Upload the recommended playlist to the user's Spotify profile.
 }
