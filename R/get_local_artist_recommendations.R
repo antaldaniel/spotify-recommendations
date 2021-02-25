@@ -2,7 +2,7 @@
 #'
 #' Recommend local artists from user_playlist_artist data frame.
 #'
-#' @inheritParams user_playlist_artists
+#' @param user_playlist_artists A character vector of Spotify artist identifiers.
 #' @inheritParams get_local_recommendations
 #' @rdname target_ids
 #' @importFrom spotifyr get_playlist_audio_features
@@ -43,6 +43,11 @@ get_local_artist_recommendations <- function(
                                no   = nrow(artist_distance_table) )
 
   ## Create a minimum distance seed --------------------------------------------------
+
+  if (nrow(artist_distance_table)==0) {
+    warning ( "No recommendation was made by get_local_artist_recommendations()" )
+    return(NULL)
+  }
 
   min_rec <- artist_distance_table  %>%
     filter ( distance == min(.data$distance,na.rm=TRUE) ) %>%

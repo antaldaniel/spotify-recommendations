@@ -6,16 +6,14 @@ sound_of_dutch_indie_playlist_id <- "2pSeH1YQCSICs2knjs7e5o"
 
 possibly_get_playlist('sound_of_dutch_indie_playlist')
 
-get_playlist_information(playlist_id = 'sound_of_dutch_indie_playlist')
+tested_playlist_info <- get_playlist_information(playlist_id = 'sound_of_dutch_indie_playlist')
 
 test_that("Correct format is returned", {
-  expect_equal(2 * 2, 4)
+  expect_equal(class ( tested_playlist_info ), "list")
+  expect_equal(length( tested_playlist_info ), 3)
 })
 
 
-sound_of_dutch_indie_audio_features <- spotifyr::get_playlist_audio_features(
-  playlist_uris = sound_of_dutch_indie_playlist_id,
-  authorization = authorization )
 
 
-playlist_id <- "2pSeH1YQCSICs2knjs7e5o"
+

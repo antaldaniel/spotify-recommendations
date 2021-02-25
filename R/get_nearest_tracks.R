@@ -2,7 +2,7 @@
 #'
 #' Get recommendations based on genre.
 #'
-#' @param user_tracks A tibble created by \code{\link{get_playlist_information}}.
+#' @param user_playlist_info A tibble created by \code{\link{get_playlist_information}}.
 #' @param new_tracks Tracks to limit.
 #' @inheritParams get_local_recommendations
 #' @importFrom spotifyr get_playlist_audio_features
@@ -14,12 +14,16 @@
 #' @return A character vector or artist IDs.
 #' @export
 
-get_nearest_tracks <- function( user_tracks,
+get_nearest_tracks <- function( user_playlist_info,
                                 new_tracks,
                                 n_rec = 5 ) {
 
+  if ( "list" %in% class(user_playlist_info) ) {
+    user_playlist_info <- user_playlist_info$user_playlist_tracks
+  }
+
   ## subset the data frames ------------------------------------------
-  user_tracks <- user_tracks %>%
+  user_tracks <- user_playlist_info %>%
     select ( any_of(c("track.id","track_id",  "danceability","energy", "key",
                       "instrumentalness",
                       "liveness", "valence", "tempo", "time_signature")) )
@@ -35,7 +39,8 @@ get_nearest_tracks <- function( user_tracks,
     select ( vars_select_helpers$where (is.numeric) )
 
   scaled_new_tracks <- scale(new_tracks %>%
-                               select ( vars_select_helpers$where (is.numeric) ))
+                               select ( vars_select_helpers$where(is.numeric) )
+                             )
 
   ## Cluster user tracks to n clusters, and use the cluster center for n_rec
   ## recommendations and not more.
@@ -56,7 +61,7 @@ get_nearest_tracks <- function( user_tracks,
   ## replace till unique, i.e. if track already recommended, recommend
   ## something else till n unique tracks are recommended  -------------
 
-  for ( i in 1:nrow(user_track_clusters$centers) ) {
+  for ( i in 1:n_rec ) {
 
     nearest_tracks[i] <- closest_to_center(centers = user_track_clusters,
                                            df = scaled_new_tracks,

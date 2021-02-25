@@ -27,7 +27,7 @@
 get_local_recommendations <- function(
     playlist_id = "6KHw5aZWWsmRqpT7o290Mo",
     target_nationality = "sk",
-    target_release = NULL,
+    target_release     = "sk",
     recommendation_type = "artists",
     limit = 20,
     n_rec = 4,
@@ -45,7 +45,9 @@ get_local_recommendations <- function(
   ## Load target artist data ---------------------------------------
 
   if ( ! exists ("listen_local_artist_data") ) {
-    # In the shiny app, the object must exist in the global session.
+    # It should exist in the global environment of the Shiny App
+    # see Objects visible across all sessions
+    # https://shiny.rstudio.com/articles/scoping.html
     if ( !is.null(listen_local_artist_data) ) {
       load_data ( variable_name = "listen_local_artists",
                   data_path = listen_local_artist_data,
@@ -64,12 +66,15 @@ get_local_recommendations <- function(
   if ( recommendation_type == 'artists' ) {
     target_nationality <- target_nationality
     target_release     <- NULL
+    target_artist_ids <- get_national_artist_ids(target_nationality)
   } else if ( recommendation_type == "release") {
     target_nationality <- NULL
     target_release     <- "sk"
+    target_artist_ids  <- NULL
   } else {
     if ( target_nationality != target_release ) {
       target_release     <- target_nationality
+      target_artist_ids <- get_national_artist_ids(target_nationality)
     }
   }
 
@@ -78,10 +83,8 @@ get_local_recommendations <- function(
                        "release_country_code",
                        "target_artists" )
 
-  target_artist_ids <- get_national_artist_ids(target_nationality)
-  users_artists <- unique(user_playlist_info$user_playlist_artists$id)
 
-  any ( users_artists %in% target_artist_ids )
+  users_artists <- unique(user_playlist_info$user_playlist_artists$id)
 
   message ( "Getting initial user recommendations")
 
@@ -112,7 +115,8 @@ get_local_recommendations <- function(
   local_recommendations <- local_recommendations %>%
     select ( any_of(vars_to_select) )
 
-  if ( nrow(local_recommendations)>=n_rec ) {  #should return n_rec number recommendations
+  if ( nrow(local_recommendations)>=n_rec ) {
+    #should return n_rec number recommendations
     return(local_recommendations)
   }
 
@@ -138,39 +142,44 @@ get_local_recommendations <- function(
     authorization = authorization
   )
 
-  message ( paste0(length (recommended_by_artist_similarity), " similar artists found."))
+  if (!is.null(recommended_by_artist_similarity)) {
+    message ( paste0(length (recommended_by_artist_similarity), " similar artists found."))
 
-  assertthat::assert_that(all ( recommended_by_artist_similarity %in% target_artist_ids ),
-                          msg = "Wrong nationality is recommended.")
+    assertthat::assert_that(all ( recommended_by_artist_similarity %in% target_artist_ids ),
+                            msg = "Wrong nationality is recommended.")
 
-  tracks_by_artist_similarity <- lapply ( recommended_by_artist_similarity,
-                     purrr::possibly(get_artist_audio_features, NULL))
+    tracks_by_artist_similarity <- lapply ( recommended_by_artist_similarity,
+                                            purrr::possibly(get_artist_audio_features, NULL))
 
-  tracks_by_artist_similarity <- do.call( rbind, tracks_by_artist_similarity  )
+    tracks_by_artist_similarity <- do.call( rbind, tracks_by_artist_similarity  )
 
-  message ( paste0 (nrow ( tracks_by_artist_similarity ), " track candidates are available from the artists."))
+    message ( paste0 (nrow ( tracks_by_artist_similarity ), " track candidates are available from the artists."))
 
-  ## Find the most suitable tracks from the candidate list.
- local_recommendations_by_artist <- get_nearest_tracks(
-    user_tracks = user_playlist_info$user_playlist_tracks,
-    new_tracks  = tracks_by_artist_similarity )
+    ## Find the most suitable tracks from the candidate list.
+    local_recommendations_by_artist <- get_nearest_tracks(
+      user_tracks = user_playlist_info$user_playlist_tracks,
+      new_tracks  = tracks_by_artist_similarity )
 
-  message ( "Nearest candidates are identified")
+    message ( "Nearest candidates are identified")
 
-  if ( !is.null(local_recommendations_by_artist) ) {
-    local_recommendations_2 <- local_recommendations_by_artist %>%
-      mutate ( release_country_code = get_release_country(.data$external_ids.isrc),
-               target_artists = TRUE ) %>%
-      select ( all_of (vars_to_select)) %>%
-      bind_rows (local_recommendations) %>%
-      ungroup()
+    if ( !is.null(local_recommendations_by_artist) ) {
+      local_recommendations_2 <- local_recommendations_by_artist %>%
+        mutate ( release_country_code = get_release_country(.data$external_ids.isrc),
+                 target_artists = TRUE ) %>%
+        select ( all_of (vars_to_select)) %>%
+        bind_rows (local_recommendations) %>%
+        ungroup()
 
-    if ( nrow(local_recommendations_2)>=n_rec) {
-      return(sample_n(local_recommendations_2,size = n_rec))
+      if ( nrow(local_recommendations_2)>=n_rec) {
+        return(sample_n(local_recommendations_2,size = n_rec))
+      }
+    } else {
+      local_recommendations_2 <- local_recommendations_by_artist
     }
   } else {
-    local_recommendations_2 <- local_recommendations_by_artist
-    }
+    # recommended_by_artist_similarity did not result in any recommendation candidates
+    local_recommendations_2 <- local_recommendations
+  }
 
   ### ----- genre based recommendations ----------------------------------
 

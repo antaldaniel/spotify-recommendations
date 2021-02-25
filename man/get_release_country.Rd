@@ -2,9 +2,7 @@
 % Please edit documentation in R/get_release_country.R
 \name{get_release_country}
 \alias{get_release_country}
-\title{Get Release Country
-
-Get the country codes of the release countries by ISRC code.}
+\title{Get Release Country}
 \usage{
 get_release_country(isrc)
 }
@@ -15,7 +13,5 @@ get_release_country(isrc)
 A vector of ISO-3166 country codes.
 }
 \description{
-Get Release Country
-
 Get the country codes of the release countries by ISRC code.
 }

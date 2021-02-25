@@ -23,8 +23,7 @@ initial_recommendations(
 )
 }
 \arguments{
-\item{user_playlist_artists}{A user_playlist_artists data frame from
-\code{\link{get_playlist_information}}.}
+\item{user_playlist_artists}{A character vector of Spotify artist identifiers.}
 
 \item{target_ids}{A character vector of the suitable recommendation candidates.}
 

@@ -1,4 +1,4 @@
-#' @title Get Release Country
+#' Get Release Country
 #'
 #' Get the country codes of the release countries by ISRC code.
 #'

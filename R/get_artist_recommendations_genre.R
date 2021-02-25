@@ -29,17 +29,21 @@ get_artist_recommendations_genre <- function(
     data ( "artist_genre_table", envir=environment())
   }
 
-
-  ll <- listen_local_artists %>%
-    dplyr::filter ( .data$national_identity == target_nationality )
+  if ( !is.null(target_nationality) ) {
+    ll <- listen_local_artists %>%
+      dplyr::filter ( .data$national_identity == target_nationality )
+  } else {
+    ll <- listen_local_artists
+  }
 
   base_genre_distances <- local_genre_table  %>%
     full_join ( artists_by_genre  %>%
                   distinct ( .data$genre, .data$spotify_artist_id ) %>%
                   rename ( base_spotify_artist_id = .data$spotify_artist_id ),
                 by = 'genre'
-                ) %>%
-    dplyr::filter ( complete.cases(.data)) %>%
+                )
+
+  base_genre_distances <- base_genre_distances[complete.cases(base_genre_distances),] %>%
     distinct_all()
 
   ll_artist_genre_distances <- artist_genre_table %>%
@@ -47,8 +51,9 @@ get_artist_recommendations_genre <- function(
 
   tmp <- base_genre_distances  %>%
     full_join ( ll_artist_genre_distances, by = 'genre_rec' ) %>%
-    distinct ( .data$base_spotify_artist_id, .data$spotify_artist_id, .data$distance ) %>%
-    filter ( complete.cases(.data))
+    distinct ( .data$base_spotify_artist_id, .data$spotify_artist_id, .data$distance )
+
+  tmp <- tmp[complete.cases(tmp),]
 
   return_by_genre <- NULL
 
@@ -56,17 +61,21 @@ get_artist_recommendations_genre <- function(
 
   seed_n <- min ( c(nrow(tmp), 5) )
 
+  . <- NULL
+
   min_distance_tmp <- tmp[which ( min(tmp$distance) == tmp$distance),]
 
   if ( seed_n > nrow(min_distance_tmp) ) {
     return_by_genre <- tmp %>%
       arrange ( .data$distance ) %>%
-      .data[(1:seed_n), ] %>%
-      select ( spotify_artist_id ) %>% unlist %>% as.character()
+      .[(1:seed_n), ] %>%
+      select ( .data$spotify_artist_id ) %>%
+      unlist %>% as.character()
   } else if  ( seed_n <= nrow(min_distance_tmp) ) {
     return_by_genre <- min_distance_tmp %>%
       slice_head(n = seed_n ) %>%
-      select ( .data$spotify_artist_id ) %>% unlist %>% as.character()
+      select ( .data$spotify_artist_id ) %>%
+      unlist %>% as.character()
   }
 
   return_by_genre

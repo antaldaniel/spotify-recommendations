@@ -8,7 +8,7 @@
 get_local_recommendations(
   playlist_id = "6KHw5aZWWsmRqpT7o290Mo",
   target_nationality = "sk",
-  target_release = NULL,
+  target_release = "sk",
   recommendation_type = "artists",
   limit = 20,
   n_rec = 4,

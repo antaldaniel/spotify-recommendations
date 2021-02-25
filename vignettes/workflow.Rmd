@@ -12,15 +12,17 @@ knitr::opts_chunk$set(
 )
 if ( file.exists("not_included/daniel_env.R")) {
   source ("not_included/daniel_env.R")
+  listen_local_artists <- readRDS("not_included/listen_local_artists.rds")
+  artist_distances     <- readRDS("not_included/artist_distances.rds")
+  local_genre_table    <- readRDS("not_included/local_genre_table.rds")
+  artist_genre_table   <- readRDS("not_included/artist_genre_table.rds")
 } else {
   source ("../not_included/daniel_env.R")
+  listen_local_artists <- readRDS("../not_included/listen_local_artists.rds")
+  artist_distances     <- readRDS("../not_included/artist_distances.rds")
+  local_genre_table    <- readRDS("../not_included/local_genre_table.rds")
+  artist_genre_table   <- readRDS("../not_included/artist_genre_table.rds")
 }
-
-listen_local_artists <- readRDS("not_included/listen_local_artists.rds")
-artist_distances     <- readRDS("not_included/artist_distances.rds")
-local_genre_table    <- readRDS("not_included/local_genre_table.rds")
-artist_genre_table   <- readRDS("not_included/artist_genre_table.rds")
-
 ```
 
 ```{r startup}
@@ -112,6 +114,7 @@ sum(initial_dutch_indie$target_artists)
 ```{r recommend-by-artist}
 recommended_by_artist_similarity <- get_local_artist_recommendations(
   user_playlist_artists = slovakia_indie_playlist_info$user_playlist_artists$id,
+  target_ids = sk_artist_ids,
   n_rec = 5
   )
 ```
@@ -121,8 +124,8 @@ Behind the scenes, first of all the similar artists are defined.
 ```{r get_local_artist_recommendations}
 
 target_ids <- listen_local_artists %>%
-  filter ( target_nationality == "sk") %>%
-  select ( spotify_artist_id ) %>% unlist () %>% as.character()
+  filter ( .data$national_identity == "sk") %>%
+  select ( .data$spotify_artist_id ) %>% unlist () %>% as.character()
 
 new_artists_spotify_artist_id <- get_local_artist_recommendations(
   user_playlist_artists = slovakia_indie_playlist_info$user_playlist_artists$id,
@@ -140,8 +143,8 @@ tracks_by_artist_similarity <- lapply ( recommended_by_artist_similarity,
 tracks_by_artist_similarity <- do.call( rbind, tracks_by_artist_similarity  )
 
 local_recommendations_by_artist <- get_nearest_tracks(
-  user_playlist_info$user_playlist_tracks,
-  tracks_by_artist_similarity )
+  user_playlist_info = slovakia_indie_playlist_info,
+  new_tracks  = tracks_by_artist_similarity )
 ```
 
 ## Recommendations Based On Genre
@@ -156,10 +159,10 @@ user_artists_by_genre <- get_artist_genre(
     user_playlist_artists = dutch_indie_info$user_playlist_artists
   )
 
-  ## recommend artists by genre first
+## recommend artists by genre first
 recommended_by_genre <- get_artist_recommendations_genre(
     artists_by_genre = user_artists_by_genre,
-    target_nationality = target_nationality
+    target_nationality = 'sk'
   )
 
 tracks_by_genre_similarity <- lapply (
@@ -168,9 +171,9 @@ tracks_by_genre_similarity <- lapply (
   do.call( rbind, .)
 
 get_nearest_tracks(
-    user_tracks = user_playlist_info$user_playlist_tracks,
-    tracks_by_genre_similarity,
-    n = 6 )
+    user_playlist_info = dutch_indie_info$user_playlist_tracks,
+    new_tracks = tracks_by_genre_similarity,
+    n_rec = 6 )
 ```
 
 

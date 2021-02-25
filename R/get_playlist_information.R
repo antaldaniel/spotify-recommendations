@@ -6,7 +6,7 @@
 #' @param playlist A playlist querried by  \code{\link[spotifyr]{get_playlist}}.
 #' @inheritParams get_local_recommendations
 #' @importFrom purrr map_df
-#' @importFrom spotifyr get_playlist_audio_features
+#' @importFrom spotifyr get_playlist_audio_features get_spotify_access_token
 #' @importFrom dplyr count group_by arrange bind_cols case_when
 #' @return A list of unique tracks and unique artists from a playlist.
 #' @examples
@@ -18,7 +18,8 @@ get_playlist_information <- function( playlist_id = NULL,
                                       playlist = NULL,
                                       authorization = NULL) {
 
-  if (is.null(authorization)) authorization <- get_spotify_access_token()
+  sound_of_dutch_indie_features <- NULL
+  if (is.null(authorization)) authorization <- spotifyr::get_spotify_access_token()
 
   if  ( !is.null(playlist_id) ) {
 
@@ -29,15 +30,15 @@ get_playlist_information <- function( playlist_id = NULL,
       return(NULL)
     }
 
-    playlist_id <- case_when (
-      playlist_id == 'sound_of_dutch_indie_playlist' ~,
-      TRUE ~ playlist_id
-    )
-
-    ## retrieving the audio features of the list
-    user_playlist_features <- spotifyr::get_playlist_audio_features(
-      playlist_uris = playlist_id,
-      authorization = authorization )
+    if ( playlist_id == 'sound_of_dutch_indie_playlist') {
+      data ( "sound_of_dutch_indie_features", envir = environment())
+      user_playlist_features <- sound_of_dutch_indie_features
+    } else {
+      ## retrieving the audio features of the list
+      user_playlist_features <- spotifyr::get_playlist_audio_features(
+        playlist_uris = playlist_id,
+        authorization = authorization )
+    }
 
   } else {
     user_playlist <- playlist
@@ -48,11 +49,10 @@ get_playlist_information <- function( playlist_id = NULL,
                                          user_playlist_features)
   }
 
-  . <- id <- n <- NULL
-
   if ( is.null(user_playlist) ) {
     warning ("Could not get playlist")
-    return(NULL)}
+    return(NULL)
+    }
 
   get_playlist_info <- function (user_playlist) {
     user_playlist_2 <- user_playlist
@@ -77,7 +77,6 @@ get_playlist_information <- function( playlist_id = NULL,
       retrieve_time = Sys.time()
     )
   }
-
 
   user_playlist_features$release_country_code <- get_release_country(
     user_playlist_features$track.external_ids.isrc)

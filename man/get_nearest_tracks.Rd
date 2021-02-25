@@ -4,10 +4,10 @@
 \alias{get_nearest_tracks}
 \title{Get Nearest Tracks}
 \usage{
-get_nearest_tracks(user_tracks, new_tracks, n_rec = 5)
+get_nearest_tracks(user_playlist_info, new_tracks, n_rec = 5)
 }
 \arguments{
-\item{user_tracks}{A tibble created by \code{\link{get_playlist_information}}.}
+\item{user_playlist_info}{A tibble created by \code{\link{get_playlist_information}}.}
 
 \item{new_tracks}{Tracks to limit.}
 
