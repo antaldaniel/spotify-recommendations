@@ -23,16 +23,12 @@ initial_recommendations(
 )
 }
 \arguments{
-\item{user_playlist_artists}{A \code{user_playlist_artists} part from the
-the list received from A list received from
-\code{\link{get_playlist_information}}.}
+\item{user_playlist_artists}{A user_playlist_artists data frame from
+\code{\link{user_playlist_info}}.}
 
 \item{target_ids}{A character vector of the suitable recommendation candidates.}
 
 \item{n_rec}{Number of required recommendations. (Maximum value, may not be fulfilled.)}
-
-\item{authorization}{Defaults to \code{NULL} when
-\code{\link[spotifyr]{get_spotify_access_token()}} is invoked.}
 
 \item{playlist_information}{A list received from A playlist queried by
 \code{{get_playlist_information}}.}

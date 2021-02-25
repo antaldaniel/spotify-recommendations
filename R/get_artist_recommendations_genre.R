@@ -5,8 +5,9 @@
 #' @param artists_by_genre A tibble created by \code{\link{get_artist_genre}}.
 #' @inheritParams get_local_recommendations
 #' @importFrom spotifyr get_playlist_audio_features
-#' @importFrom dplyr select filter distinct full_join left_join rename
+#' @importFrom dplyr select filter distinct full_join left_join rename distinct_all
 #' @importFrom dplyr sample_n bind_rows rename group_by
+#' @import rlang
 #' @return A character vector or artist IDs.
 #' @export
 
@@ -32,11 +33,11 @@ get_artist_recommendations_genre <- function(
 
   base_genre_distances <- local_genre_table  %>%
     full_join ( artists_by_genre  %>%
-                  distinct ( genre, spotify_artist_id ) %>%
-                  dplyr::rename ( base_spotify_artist_id = spotify_artist_id ),
+                  distinct ( .data$genre, .data$spotify_artist_id ) %>%
+                  rename ( base_spotify_artist_id = .data$spotify_artist_id ),
                 by = 'genre'
                 ) %>%
-    dplyr::filter ( complete.cases(.)) %>%
+    dplyr::filter ( complete.cases(.data)) %>%
     distinct_all()
 
   ll_artist_genre_distances <- artist_genre_table %>%
@@ -45,7 +46,7 @@ get_artist_recommendations_genre <- function(
   tmp <- base_genre_distances  %>%
     full_join ( ll_artist_genre_distances, by = 'genre_rec' ) %>%
     distinct ( base_spotify_artist_id, spotify_artist_id, distance ) %>%
-    filter ( complete.cases(.))
+    filter ( complete.cases(.data))
 
   return_by_genre <- NULL
 

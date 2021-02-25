@@ -3,9 +3,7 @@
 \name{get_local_recommendations}
 \alias{get_local_recommendations}
 \alias{recparam}
-\title{Get Local Recommendations
-
-This is the wrapper function to the Listen Local Demo recommendation system.}
+\title{Get Local Recommendations}
 \usage{
 get_local_recommendations(
   playlist_id = "6KHw5aZWWsmRqpT7o290Mo",
@@ -38,9 +36,6 @@ or \code{'both'}.}
 
 \item{silent}{Defaults to \code{TRUE}.}
 
-\item{authorization}{Defaults to \code{NULL} when
-\code{\link[spotifyr]{get_spotify_access_token()}} is invoked.}
-
 \item{data_path}{If \code{NULL}, the functions try to load the data from the
 spotifyrecommendations package.}
 }
@@ -48,9 +43,5 @@ spotifyrecommendations package.}
 A tibble of recommendations.
 }
 \description{
-Get Local Recommendations
-
 This is the wrapper function to the Listen Local Demo recommendation system.
-
-Recommendation parameters
 }

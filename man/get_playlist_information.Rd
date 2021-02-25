@@ -2,9 +2,7 @@
 % Please edit documentation in R/get_playlist_information.R
 \name{get_playlist_information}
 \alias{get_playlist_information}
-\title{Get Playlist Information
-
- Get unique tracks and unique artists from a playlist in a list.}
+\title{Get Playlist Information}
 \usage{
 get_playlist_information(
   playlist_id = NULL,
@@ -16,15 +14,10 @@ get_playlist_information(
 \item{playlist_id}{A single Spotify playlist id}
 
 \item{playlist}{A playlist querried by  \code{\link[spotifyr]{get_playlist}}.}
-
-\item{authorization}{Defaults to \code{NULL} when
-\code{\link[spotifyr]{get_spotify_access_token()}} is invoked.}
 }
 \value{
 A list of unique tracks and unique artists from a playlist.
 }
 \description{
-Get Playlist Information
-
- Get unique tracks and unique artists from a playlist in a list.
+Get unique tracks and unique artists from a playlist in a list.
 }

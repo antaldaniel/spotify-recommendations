@@ -1,11 +1,10 @@
-#' @title Get Playlist Information
+#' Get Playlist Information
 #'
 #'  Get unique tracks and unique artists from a playlist in a list.
 #'
 #' @param playlist_id A single Spotify playlist id
 #' @param playlist A playlist querried by  \code{\link[spotifyr]{get_playlist}}.
-#' @param authorization Defaults to \code{NULL} when
-#' \code{\link[spotifyr]{get_spotify_access_token()}} is invoked.
+#' @inheritParams get_local_recommendations
 #' @importFrom purrr map_df possibly
 #' @importFrom spotifyr get_playlist_audio_features
 #' @importFrom dplyr count group_by arrange bind_cols

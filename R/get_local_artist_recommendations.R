@@ -2,9 +2,7 @@
 #'
 #' Recommend local artists from user_playlist_artist data frame.
 #'
-#' @param user_playlist_artists A \code{user_playlist_artists} part from the
-#' the list received from A list received from
-#' \code{\link{get_playlist_information}}.
+#' @inheritParams user_playlist_artists
 #' @inheritParams get_local_recommendations
 #' @rdname target_ids
 #' @importFrom spotifyr get_playlist_audio_features

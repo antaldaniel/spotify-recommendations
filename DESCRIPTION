@@ -23,7 +23,9 @@ Imports:
 RoxygenNote: 7.1.1
 Suggests: 
     knitr,
-    rmarkdown
+    rmarkdown,
+    fs,
+    readxl
 VignetteBuilder: knitr
 Depends: 
     R (>= 2.10)

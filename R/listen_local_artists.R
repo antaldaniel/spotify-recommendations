@@ -8,5 +8,5 @@
 #'   \item{spotify_artist_name}{The name of the artist on Spotify}
 #'   \item{national_identity}{assumed national identity of the artist(s)}
 #' }
-#' @source \url{http://listenlocal.info/}
+#' @source \url{https://reprex.nl/project/listen-local/}
 "listen_local_artists"

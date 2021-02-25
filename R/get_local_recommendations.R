@@ -1,4 +1,4 @@
-#' @title Get Local Recommendations
+#' Get Local Recommendations
 #'
 #' This is the wrapper function to the Listen Local Demo recommendation system.
 #'
@@ -6,8 +6,6 @@
 #' @param recommendation_type Defaults to \code{'artists'}, can be \code{'release'}
 #' or \code{'both'}.
 #' @param limit Number of playlist items used for recommendation seed.
-#' @param authorization Defaults to \code{NULL} when
-#' \code{\link[spotifyr]{get_spotify_access_token()}} is invoked.
 #' @param silent Defaults to \code{TRUE}.
 #' @param data_path If \code{NULL}, the functions try to load the data from the
 #' spotifyrecommendations package.
@@ -224,9 +222,9 @@ get_local_recommendations <- function(
       bind_rows (local_recommendations_2) %>%
       ungroup()
 
-    if ( nrow(local_recommendations_3)>=n) {
-      ## if the candidates are more than required, randomly select n
-      return(sample_n(local_recommendations_3,size = n_rec))
+    if ( nrow(local_recommendations_3)>=n_rec) {
+      ## if the candidates are more than required, randomly select n_rec
+      return(sample_n(local_recommendations_3, size = n_rec))
     }
   } else {
     ## if there were no genre-based recommendations, give whatever we have

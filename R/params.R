@@ -13,3 +13,21 @@ NULL
 #' @name target_ids
 NULL
 
+#' Information about the user playlist
+#'
+#' An analysis of a user playlist that will serve as the basis of new recommendations.
+#'
+#' @param user_playlist_info An analysis of a user playlist that will serve as the basis of new recommendations
+#' created by \code{get_playlist_information}.
+#' @name user_playlist_info
+NULL
+
+
+#' Information about the artists on the user playlist
+#'
+#' An analysis of a user playlist that will serve as the basis of new recommendations.
+#'
+#' @param user_playlist_artists A user_playlist_artists data frame from
+#' \code{\link{user_playlist_info}}.
+#' @name user_playlist_artists
+NULL

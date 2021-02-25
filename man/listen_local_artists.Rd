@@ -13,7 +13,7 @@ A data frame with 1110 rows and 3 variables:
 }
 }
 \source{
-\url{http://listenlocal.info/}
+\url{https://reprex.nl/project/listen-local/}
 }
 \usage{
 listen_local_artists

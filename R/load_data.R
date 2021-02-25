@@ -1,4 +1,6 @@
 
+#' @importFrom utils read.csv
+#' @keywords internal
 
 load_data <- function ( variable_name = NULL,
                         data_path,
