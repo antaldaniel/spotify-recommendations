@@ -2,73 +2,69 @@
 #'
 #' Recommend local artists from user_playlist_artist data frame.
 #'
-#' @param user_playlist_artists A user_playlist_artist data frame.
-#' @param n Number of required recommendations (maximum value)
+#' @param user_playlist_artists A \code{user_playlist_artists} part from the
+#' the list received from A list received from
+#' \code{\link{get_playlist_information}}.
+#' @param n_rec Number of required recommendations (maximum value)
 #' @param authorization Defaults to \code{NULL} when
 #' \code{get_spotify_access_token()} is invoked.
+#' @param target_ids A character vector of the suitable recommendation candidates.
 #' @importFrom spotifyr get_playlist_audio_features
 #' @importFrom dplyr select filter distinct anti_join sample_n arrange
-#' @importFrom dplyr arrange rename left_join group_by slice_head
+#' @importFrom dplyr arrange rename left_join group_by slice_head slice_sample slice_max
 #' @importFrom dplyr full_join
 #' @importFrom tidyselect all_of
 #' @importFrom spotifyr get_spotify_access_token
-#' @examples
-#' get_national_artist_ids ( national_identity = 'sk' )
-#' @return Returns n or less artist ids.
+#' @import rlang
+#' @return Returns a character vector of n or less artist ids.
 #' @export
 
 get_local_artist_recommendations <- function(
                    user_playlist_artists,
-                   n = 5,
-                   authorization = NULL ) {
-  . <- id <- spotify_artist_id <- distance <- NULL
+                   target_ids,
+                   n_rec = 5,
+                   authorization = NULL) {
 
   if (is.null(authorization)) token <- get_spotify_access_token()
 
-  if ( "list" %in% class(user_playlist_artists) ) {
-    user_playlist_artists <- user_playlist_artists$user_playlist_artists
+  user_playlist_artists
+
+  if ( ! exists('artist_distances') ) {
+    # It should exist in the global environment of the Shiny App
+    # see Objects visible across all sessions
+    # https://shiny.rstudio.com/articles/scoping.html
+    data ( "artist_distances", envir=environment() )
   }
 
-  if ( ! 'data.frame' %in% class (user_playlist_artists) ) {
-    stop ("user_playlist_artists must be a data frame")
-  }
-
-  data ( "artist_distances", envir=environment() )
-
-  rec <- user_playlist_artists %>%
-    rename ( spotify_artist_id = id ) %>%
-    left_join ( artist_distances,
-                by = "spotify_artist_id") %>%
-    filter ( !is.na(recommendation)) %>%
+  artist_distance_table <- artist_distances %>%
+    filter ( spotify_artist_id %in% user_playlist_artists ) %>%
+    filter ( recommendation %in% target_ids) %>%
+    filter ( !is.na(.data$recommendation) ) %>%
     arrange ( distance )
 
-  return_seed_size <- ifelse  (nrow(rec)>n,n,nrow(rec))
+  return_seed_size <- ifelse ( test = nrow(artist_distance_table)>n_rec,
+                               yes  = n_rec,
+                               no   = nrow(artist_distance_table) )
 
-  ## Try a diverse seed:
+  ## Create a minimum distance seed --------------------------------------------------
 
-  diverse_rec <- rec %>%
-    group_by (spotify_artist_id ) %>%
-    sample_n (size = 1, replace = FALSE ) %>%
-    arrange ( distance ) %>%
-    ungroup()
+  min_rec <- artist_distance_table  %>%
+    filter ( distance == min(.data$distance,na.rm=TRUE) ) %>%
+    distinct ( recommendation ) %>%
+    slice_sample (n = min(c(return_seed_size, nrow(.data))))
 
-  if ( nrow (diverse_rec) < n ) {
-    further_rec <-  rec %>%
-      anti_join ( diverse_rec,c("spotify_artist_id", "n",
-                                "recommendation", "distance",
-                                "national_identity")  ) %>%
-      ungroup() %>%
-      arrange ( distance ) %>%
-      slice_head ( n = n-nrow(diverse_rec)  )
+  # all( min_rec$recommendation %in% target_artist_ids )
 
-    diverse_rec %>%
-      full_join ( further_rec,
-                  by = c("spotify_artist_id", "n",
-                         "recommendation", "distance",
-                         "national_identity")) %>%
-      select ( recommendation ) %>%
-      unlist () %>% as.character()
-  } else {
-    diverse_rec$recommendation
+  if ( nrow(min_rec)< n_rec/3 ) {
+    ## If there are too few artists, add new ones --------------------
+
+    min_rec <- artist_distance_table  %>%
+      distinct (.data$recommendation, .data$distance) %>%
+      slice_max ( order_by = -.data$distance,
+                  n = min(c(return_seed_size, nrow(min_rec))) )
+
   }
+
+  return(min_rec$recommendation)
 }
+

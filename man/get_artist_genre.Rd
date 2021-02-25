@@ -4,13 +4,15 @@
 \alias{get_artist_genre}
 \title{Get Artist Genre
 
-Get the genres of the artist, if available.}
+Get the genres of the artists, if available.}
 \usage{
-get_artist_genre(user_playlist_artists)
+get_artist_genre(user_playlist_artists, max_n = 20)
 }
 \arguments{
 \item{user_playlist_artists}{A user_playlist_artists data frame from
-\code{\link{user_playlist_info}}}
+\code{\link{user_playlist_info}}.}
+
+\item{max_n}{Maximum number of artists to work with, defaults to \code{20}.}
 }
 \value{
 A tibble of artist IDs and genres in long form.
@@ -18,5 +20,5 @@ A tibble of artist IDs and genres in long form.
 \description{
 Get Artist Genre
 
-Get the genres of the artist, if available.
+Get the genres of the artists, if available.
 }

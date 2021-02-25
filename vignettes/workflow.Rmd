@@ -16,12 +16,17 @@ if ( file.exists("not_included/daniel_env.R")) {
   source ("../not_included/daniel_env.R")
 }
 
+listen_local_artists <- readRDS("not_included/listen_local_artists.rds")
+artist_distances     <- readRDS("not_included/artist_distances.rds")
+local_genre_table    <- readRDS("not_included/local_genre_table.rds")
+artist_genre_table   <- readRDS("not_included/artist_genre_table.rds")
+
 ```
 
 ```{r startup}
 library(spotifyrecommendations)
-slovakia_indie_playlist_id <- "1E8vQ9Bt4bRKWm0NTzSMt2"
-slovakia_top_50_playlist_id <- "6WrpeNyqtoq6PEDXyuamGt"
+slovakia_indie_playlist_id       <- "1E8vQ9Bt4bRKWm0NTzSMt2"
+slovakia_top_50_playlist_id      <- "6WrpeNyqtoq6PEDXyuamGt"
 sound_of_dutch_indie_playlist_id <- "2pSeH1YQCSICs2knjs7e5o"
 
 token  <- get_spotify_access_token()
@@ -41,23 +46,26 @@ The `?get_playlist` information uses `?get_release_country`
 
 slovakia_indie_playlist_info <- get_playlist_information(
   playlist_id  = slovakia_indie_playlist_id, 
-  token = token
+  authorization = token
   )
 
 slovakia_top_50_info <- get_playlist_information(
   playlist_id  = slovakia_top_50_playlist_id, 
-  token = token
+  authorization = token
   )
 
 dutch_indie_info <- get_playlist_information(
   playlist_id  = sound_of_dutch_indie_playlist_id, 
-  token = token
+  authorization = token
   )
 
 slovakia_indie_playlist_info$user_playlist_artists %>% head ()
 slovakia_indie_playlist_info$user_playlist_tracks  %>% head ()
 ```
 
+## Initial recommendations 
+
+The function `initial_recommendations()` returns a tibble of recommendations. `recommendations_by_tracks$target_artists` contains a logical vector, identifying the tracks that are among `target_ids`.
 
 ```{r initial_recommendations}
 
@@ -66,19 +74,17 @@ sk_artist_ids <- get_national_artist_ids("sk")
 initial_slovak_indie <- initial_recommendations(
   playlist_information = slovakia_indie_playlist_info, 
   target_ids = sk_artist_ids, 
-  token = token )
+  authorization = token )
 
 initial_slovak_hits <- initial_recommendations(
   playlist_information = slovakia_top_50_info, 
   target_ids = sk_artist_ids, 
-  token = token )
+  authorization = token )
 
 initial_dutch_indie <- initial_recommendations(
   playlist_information = dutch_indie_info, 
   target_ids = sk_artist_ids, 
-  token = token )
-
-
+  authorization = token )
 ```
 
 
@@ -105,9 +111,37 @@ sum(initial_dutch_indie$target_artists)
 
 ```{r recommend-by-artist}
 recommended_by_artist_similarity <- get_local_artist_recommendations(
-  user_playlist_artists = dutch_indie_info, 
-  n = 5
+  user_playlist_artists = slovakia_indie_playlist_info$user_playlist_artists$id,
+  n_rec = 5
   )
+```
+
+Behind the scenes, first of all the similar artists are defined.
+
+```{r get_local_artist_recommendations}
+
+target_ids <- listen_local_artists %>%
+  filter ( target_nationality == "sk") %>%
+  select ( spotify_artist_id ) %>% unlist () %>% as.character()
+
+new_artists_spotify_artist_id <- get_local_artist_recommendations(
+  user_playlist_artists = slovakia_indie_playlist_info$user_playlist_artists$id,
+  target_ids = target_ids,
+  n = 5,
+  authorization = NULL )
+```
+
+Then the new recommended artists' nearest tracks are defined:
+
+```{r get_local_artist_recommendations}
+tracks_by_artist_similarity <- lapply ( recommended_by_artist_similarity,
+                                        purrr::possibly(get_artist_audio_features, NULL))
+
+tracks_by_artist_similarity <- do.call( rbind, tracks_by_artist_similarity  )
+
+local_recommendations_by_artist <- get_nearest_tracks(
+  user_playlist_info$user_playlist_tracks,
+  tracks_by_artist_similarity )
 ```
 
 ## Recommendations Based On Genre
@@ -118,10 +152,25 @@ dutch_artists_by_genre <- get_artist_genre(
   user_playlist_artists = dutch_indie_info$user_playlist_artists
   )
 
-recommended_by_genre <- get_artist_recommendations_genre(
-  artists_by_genre = dutch_artists_by_genre , 
-  target_nationality = "sk"
+user_artists_by_genre <- get_artist_genre(
+    user_playlist_artists = dutch_indie_info$user_playlist_artists
   )
+
+  ## recommend artists by genre first
+recommended_by_genre <- get_artist_recommendations_genre(
+    artists_by_genre = user_artists_by_genre,
+    target_nationality = target_nationality
+  )
+
+tracks_by_genre_similarity <- lapply (
+    recommended_by_genre,
+    purrr::possibly(get_artist_audio_features, NULL)) %>%
+  do.call( rbind, .)
+
+get_nearest_tracks(
+    user_tracks = user_playlist_info$user_playlist_tracks,
+    tracks_by_genre_similarity,
+    n = 6 )
 ```
 
 
@@ -132,28 +181,20 @@ vars_to_select <- c( "id", "name", "popularity",
                     "uri", "external_ids.isrc",
                     "release_country_code", 
                     "target_artists")
-initial_dutch_indie
- target_ids = get_national_artist_ids("sk")
 
-further_ducth_indie <- get_track_recommendations_artist (
-  spotify_artist_id = c(
-    recommended_by_artist_similarity, recommended_by_genre
-    ), 
-  target_nationality = "sk", 
-  target_release = NULL, 
-  authorization = token
-)
-
-recommendations_for_dutch_indie <- initial_dutch_indie %>%
-  select ( all_of(vars_to_select) ) %>% 
-  bind_rows ( further_ducth_indie  %>%
-                select (all_of(vars_to_select))
-              )
+get_local_recommendations(
+    playlist_id = sound_of_dutch_indie_playlist_id,
+    target_nationality = "sk",
+    recommendation_type = "artists",
+    limit = 20,
+    n = 4,
+    silent = TRUE,
+    authorization = NULL )
 ```
 ```{r}
 start_time <- Sys.time()
 slovak_indie_based <- get_local_recommendations(
-  user_playlist_id = "1E8vQ9Bt4bRKWm0NTzSMt2",
+  playlist_id = "1E8vQ9Bt4bRKWm0NTzSMt2",
   recommendation_type = "release"
 )
 Sys.time()-start_time
@@ -163,7 +204,8 @@ Sys.time()-start_time
 ```{r}
 start_time <- Sys.time()
 global_top_50 <- get_local_recommendations(
-  user_playlist_id = "1KNl4AYfgZtOVm9KHkhPTF",
+  playlist_id = "1KNl4AYfgZtOVm9KHkhPTF",
+  recommendation_type = 'artists' 
 )
 Sys.time()-start_time
 ```

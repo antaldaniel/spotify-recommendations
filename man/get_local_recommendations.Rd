@@ -2,34 +2,52 @@
 % Please edit documentation in R/get_local_recommendations.R
 \name{get_local_recommendations}
 \alias{get_local_recommendations}
-\title{Get Local Recommendations}
+\title{Get Local Recommendations
+
+This is the wrapper function to the Listen Local Demo recommendation system.}
 \usage{
 get_local_recommendations(
-  user_playlist_id = "6KHw5aZWWsmRqpT7o290Mo",
-  target_country = "sk",
+  playlist_id = "6KHw5aZWWsmRqpT7o290Mo",
+  target_nationality = "sk",
+  target_release = NULL,
   recommendation_type = "artists",
   limit = 20,
   n = 4,
   silent = TRUE,
-  authorization = NULL
+  authorization = NULL,
+  listen_local_artist_data = "not_included/listen_local_artists.rds",
+  artist_distance_data = "not_included/artist_distances.rds",
+  local_genre_table_path = "not_included/local_genre_table.rds",
+  artist_genre_table_path = "not_included/artist_genre_table.rds"
 )
 }
 \arguments{
-\item{target_country}{Defaults to \code{"sk"}}
+\item{playlist_id}{A Spotify playlist id.}
+
+\item{target_nationality}{Defaults to \code{"sk"}}
+
+\item{target_release}{Defaults to \code{NULL}}
+
+\item{recommendation_type}{Defaults to \code{'artists'}, can be \code{'release'}
+or \code{'both'}.}
 
 \item{limit}{Number of playlist items used for recommendation seed.}
 
 \item{n}{number of required target country recommendations}
 
+\item{silent}{Defaults to \code{TRUE}.}
+
 \item{authorization}{Defaults to \code{NULL} when
 \code{\link[spotifyr]{get_spotify_access_token()}} is invoked.}
 
-\item{playlist_information}{A list received from
-\code{\link{get_playlist_information}}.}
+\item{data_path}{If \code{NULL}, the functions try to load the data from the
+spotifyrecommendations package.}
 }
 \value{
 A tibble of recommendations.
 }
 \description{
 Get Local Recommendations
+
+This is the wrapper function to the Listen Local Demo recommendation system.
 }

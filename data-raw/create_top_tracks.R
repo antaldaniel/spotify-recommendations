@@ -2,12 +2,42 @@
 library(tidyverse)
 library(spotifyrecommendations)
 
+spotify_recommendations_dir <- file.path(
+  "..", "..", "__SR", "spotify-features", "tables"
+)
+
+dir(spotify_recommendations_dir)
+
+
 sk_top_tracks <- read.csv(file.path(
-  'data-raw', 'SK_Artist_Top_Tracks_Table.csv'
+  spotify_recommendations_dir, 'SK_Artist_Top_Tracks_Table.csv'
 ))  %>%
   setNames(., c("spotify_artist_id", names(.)[2:ncol(.)]))
 
-names ( sk_top_tracks )
+nl_top_tracks <- read.csv(file.path(
+  spotify_recommendations_dir, 'NL_Artist_Top_Tracks_Table.csv'
+))  %>%
+  setNames(., c("spotify_artist_id", names(.)[2:ncol(.)]))
+
+hu_top_tracks <- read.csv(file.path(
+  spotify_recommendations_dir, 'HU_Artist_Top_Tracks_Table.csv'
+))  %>%
+  setNames(., c("spotify_artist_id", names(.)[2:ncol(.)]))
+
+top_tracks <- sk_top_tracks  %>%
+  mutate ( national_identity  = "sk") %>%
+  bind_rows(nl_top_tracks %>% mutate ( national_identity = "nl") ) %>%
+  bind_rows(hu_top_tracks %>% mutate ( national_identity = "hu"))
+
+spotify_top_tracks <- top_tracks %>%
+  rename ( spotify_artist_name = artist_name,
+           spotify_popularity = popularity,
+           spotify_genres = genres ) %>%
+  select ( -all_of(c('genre_1', "genre_2", "genre_3", "followers",
+                     "followers" ))) %>%
+  mutate ( date = Sys.Date())
+
+
 listen_local_artists <- sk_top_tracks %>%
   select ( all_of (c(
     "spotify_artist_id", "name", "all_english_title",
@@ -33,3 +63,10 @@ listen_local_artists <- sk_top_tracks %>%
                      "genre_1", "genre_2", "genre_3")))
 
 usethis::use_data(listen_local_artists, overwrite = TRUE)
+
+conn <- dbConnect(RSQLite::SQLite(), "not_included/listen-local.db")
+dbWriteTable(conn, "spotify_top_tracks", spotify_top_tracks )
+dbListTables(conn)
+dbDisconnect(conn)
+
+

@@ -6,10 +6,10 @@
 
 Get unique tracks and unique artists from a playlist in a list.}
 \usage{
-get_national_artist_ids(national_identity = "sk")
+get_national_artist_ids(target_identity = "sk")
 }
 \arguments{
-\item{national_identity}{One of \code{'cz'} or \code{'sk'}.}
+\item{target_identity}{One of \code{'sk'} or \code{'nl'} or \code{'hu'}.}
 }
 \value{
 A character vector or artist IDs.

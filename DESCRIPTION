@@ -1,7 +1,7 @@
 Package: spotifyrecommendations
 Type: Package
 Title: Listen Local Recommendations On Spotify
-Version: 0.1.4
+Version: 0.1.5
 Author: Daniel Antal
 Maintainer: Daniel Antal <daniel.antal@dataobservatory.eu>
 Description: An experimental recommendation system that suggests a partly locally 
@@ -15,7 +15,11 @@ Imports:
     purrr,
     tidyr,
     tidyselect,
-    tibble
+    tibble,
+    stats,
+    utils,
+    rlang,
+    assertthat
 RoxygenNote: 7.1.1
 Suggests: 
     knitr,

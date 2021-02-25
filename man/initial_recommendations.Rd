@@ -2,7 +2,10 @@
 % Please edit documentation in R/initial_recommendations.R
 \name{initial_recommendations}
 \alias{initial_recommendations}
-\title{Get Initial Recommendations}
+\title{Get Initial Recommendations
+
+The initial recommendations are based on the Spotify algorithm, and try to
+meet the user local content targets.}
 \usage{
 initial_recommendations(
   playlist_information,
@@ -13,18 +16,24 @@ initial_recommendations(
 )
 }
 \arguments{
-\item{playlist_information}{A list received from get_playlist_information.}
+\item{playlist_information}{A list received from A playlist queried by
+\code{{get_playlist_information}}.}
 
 \item{target_ids}{Spotify artists ids from the targeted repertoire.}
 
 \item{limit}{How many items are used for the initial recommendation.}
 
-\item{authorization}{Defaults to \code{NULL} when
-\code{get_spotify_access_token()} is invoked.}
+\item{authorization}{Defaults to \code{NULL} when #' \code{get_spotify_access_token()} is invoked.}
+
+\item{target_release}{The targetted country code of the sound recordings,}
 }
 \value{
-A tibble of recommendations.
+A tibble of recommendations. \code{recommendations_by_tracks$target_artists} contains a
+logical vector, identifying the tracks that are among \code{target_ids}.
 }
 \description{
 Get Initial Recommendations
+
+The initial recommendations are based on the Spotify algorithm, and try to
+meet the user local content targets.
 }

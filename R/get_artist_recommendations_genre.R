@@ -5,7 +5,7 @@
 #' @param artists_by_genre A tibble created by \code{\link{get_artist_genre}}.
 #' @param target_nationality One of \code{'cz'} or \code{'sk'}.
 #' @importFrom spotifyr get_playlist_audio_features
-#' @importFrom dplyr select filter distinct full_join left_join
+#' @importFrom dplyr select filter distinct full_join left_join rename
 #' @importFrom dplyr sample_n bind_rows rename group_by
 #' @return A character vector or artist IDs.
 #' @export
@@ -14,33 +14,54 @@ get_artist_recommendations_genre <- function(
       artists_by_genre,
       target_nationality = "sk" ) {
 
-  data ( "local_genre_table", envir=environment())
-  data ( "listen_local_artists", envir=environment())
+  if ( ! exists("local_genre_table")) {
+    data ( "local_genre_table", envir=environment())
+  }
+
+  if ( ! exists("listen_local_artists") ) {
+    data ( "listen_local_artists", envir=environment())
+  }
+
+  if ( ! exists("artist_genre_table") ) {
+    data ( "artist_genre_table", envir=environment())
+  }
+
 
   ll <- listen_local_artists %>%
-    dplyr::filter ( national_identity == target_nationality)
+    dplyr::filter ( national_identity == target_nationality )
 
-  l_genre <- local_genre_table %>%
-    dplyr::filter ( national_identity == target_nationality)
-
-  tmp <- l_genre %>%
+  base_genre_distances <- local_genre_table  %>%
     full_join ( artists_by_genre  %>%
-                  distinct ( genre, spotify_artist_id ),
-                by = "genre") %>%
+                  distinct ( genre, spotify_artist_id ) %>%
+                  dplyr::rename ( base_spotify_artist_id = spotify_artist_id ),
+                by = 'genre'
+                ) %>%
     dplyr::filter ( complete.cases(.)) %>%
-    dplyr::rename ( base_spotify_artist_id = spotify_artist_id ) %>%
-    full_join ( ll, by = "national_identity" ) %>%
-    distinct ( base_spotify_artist_id, spotify_artist_id, distance ) %>%
-    ungroup() %>%
-    group_by( base_spotify_artist_id, distance ) %>%
-    sample_n( size = 1 )
+    distinct_all()
 
-  tmp %>% ungroup() %>%
-    filter ( distance == min (distance)) %>%
-    bind_rows ( tmp %>% ungroup %>%
-                  filter (distance > min(distance, na.rm=TRUE))) %>%
-    ungroup () %>%
-    slice_head ( n = nrow (artists_by_genre) ) %>%
-    select ( all_of("spotify_artist_id")) %>%
-    unlist() %>% as.character()
+  ll_artist_genre_distances <- artist_genre_table %>%
+    rename ( genre_rec = spotify_genres )
+
+  tmp <- base_genre_distances  %>%
+    full_join ( ll_artist_genre_distances, by = 'genre_rec' ) %>%
+    distinct ( base_spotify_artist_id, spotify_artist_id, distance ) %>%
+    filter ( complete.cases(.))
+
+  return_by_genre <- NULL
+
+  if ( nrow(tmp)<1 ) return(return_by_genre)
+
+  seed_n <- min ( c(nrow(tmp), 5) )
+
+  min_distance_tmp <- tmp[which ( min(tmp$distance) == tmp$distance),]
+
+  if ( seed_n > nrow(min_distance_tmp) ) {
+    return_by_genre <- tmp %>% arrange ( distance ) %>%  .[(1:seed_n), ] %>%
+      select ( spotify_artist_id ) %>% unlist %>% as.character()
+  } else if  ( seed_n <= nrow(min_distance_tmp) ) {
+    return_by_genre <- min_distance_tmp %>% slice_head(n = seed_n ) %>%
+      select ( spotify_artist_id ) %>% unlist %>% as.character()
+  }
+
+  return_by_genre
 }

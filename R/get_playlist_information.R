@@ -8,7 +8,7 @@
 #' \code{\link[spotifyr]{get_spotify_access_token()}} is invoked.
 #' @importFrom purrr map_df possibly
 #' @importFrom spotifyr get_playlist_audio_features
-#' @importFrom dplyr count group_by arrange
+#' @importFrom dplyr count group_by arrange bind_cols
 #' @return A list of unique tracks and unique artists from a playlist.
 #' @export
 

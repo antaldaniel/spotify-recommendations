@@ -6,6 +6,7 @@
 \usage{
 get_track_recommendations_artist(
   spotify_artist_id,
+  user_playlist_info,
   target_nationality = "sk",
   target_release = NULL,
   n = 5,

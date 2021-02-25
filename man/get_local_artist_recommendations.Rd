@@ -8,26 +8,28 @@ Recommend local artists from user_playlist_artist data frame.}
 \usage{
 get_local_artist_recommendations(
   user_playlist_artists,
-  n = 5,
+  target_ids,
+  n_rec = 5,
   authorization = NULL
 )
 }
 \arguments{
-\item{user_playlist_artists}{A user_playlist_artist data frame.}
+\item{user_playlist_artists}{A \code{user_playlist_artists} part from the
+the list received from A list received from
+\code{\link{get_playlist_information}}.}
 
-\item{n}{Number of required recommendations (maximum value)}
+\item{target_ids}{A character vector of the suitable recommendation candidates.}
+
+\item{n_rec}{Number of required recommendations (maximum value)}
 
 \item{authorization}{Defaults to \code{NULL} when
 \code{get_spotify_access_token()} is invoked.}
 }
 \value{
-Returns n or less artist ids.
+Returns a character vector of n or less artist ids.
 }
 \description{
 Get Slovak Artists IDs
 
 Recommend local artists from user_playlist_artist data frame.
-}
-\examples{
-get_national_artist_ids ( national_identity = 'sk' )
 }
