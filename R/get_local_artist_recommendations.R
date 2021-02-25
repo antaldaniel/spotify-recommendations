@@ -14,7 +14,7 @@
 #' @import rlang
 #' @return Returns a character vector of n or less artist ids.
 #' @export
-
+#'
 get_local_artist_recommendations <- function(
                    user_playlist_artists,
                    target_ids,

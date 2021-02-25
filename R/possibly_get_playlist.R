@@ -17,7 +17,6 @@ possibly_get_playlist <- function(playlist_id,
   pgp <- purrr::possibly(
     .f = spotifyr::get_playlist, NULL)
 
-
   pgp ( playlist_id, fields, market, authorization)
 }
 

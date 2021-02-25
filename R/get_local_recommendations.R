@@ -142,43 +142,51 @@ get_local_recommendations <- function(
     authorization = authorization
   )
 
-  if (!is.null(recommended_by_artist_similarity)) {
-    message ( paste0(length (recommended_by_artist_similarity), " similar artists found."))
+  if ( !is.null(recommended_by_artist_similarity) ) {
+
+    message ( paste0(length (recommended_by_artist_similarity), " similar artists found.") )
 
     assertthat::assert_that(all ( recommended_by_artist_similarity %in% target_artist_ids ),
                             msg = "Wrong nationality is recommended.")
 
     tracks_by_artist_similarity <- lapply ( recommended_by_artist_similarity,
-                                            purrr::possibly(get_artist_audio_features, NULL))
+                                            purrr::possibly(spotifyr::get_artist_audio_features, NULL) )
 
-    tracks_by_artist_similarity <- do.call( rbind, tracks_by_artist_similarity  )
+    ## Exception: artist has no albums
+    null_values <- vapply ( 1:length(tracks_by_artist_similarity), function(x) is.null(tracks_by_artist_similarity[[x]]), logical(1))
 
-    message ( paste0 (nrow ( tracks_by_artist_similarity ), " track candidates are available from the artists."))
-
-    ## Find the most suitable tracks from the candidate list.
-    local_recommendations_by_artist <- get_nearest_tracks(
-      user_tracks = user_playlist_info$user_playlist_tracks,
-      new_tracks  = tracks_by_artist_similarity )
-
-    message ( "Nearest candidates are identified")
-
-    if ( !is.null(local_recommendations_by_artist) ) {
-      local_recommendations_2 <- local_recommendations_by_artist %>%
-        mutate ( release_country_code = get_release_country(.data$external_ids.isrc),
-                 target_artists = TRUE ) %>%
-        select ( all_of (vars_to_select)) %>%
-        bind_rows (local_recommendations) %>%
-        ungroup()
-
-      if ( nrow(local_recommendations_2)>=n_rec) {
-        return(sample_n(local_recommendations_2,size = n_rec))
-      }
+    if ( all(null_values) ) {
+      # recommended_by_artist_similarity did not result in any recommendation candidates
+      local_recommendations_2 <- local_recommendations
     } else {
-      local_recommendations_2 <- local_recommendations_by_artist
+      tracks_by_artist_similarity <- do.call( rbind, tracks_by_artist_similarity  )
+      message ( paste0 (nrow ( tracks_by_artist_similarity ), " track candidates are available from the artists."))
+
+      ## Find the most suitable tracks from the candidate list.
+      local_recommendations_by_artist <- get_nearest_tracks(
+        user_playlist_info = user_playlist_info$user_playlist_tracks,
+        new_tracks         = tracks_by_artist_similarity )
+
+      message ( "Nearest candidates are identified")
+
+      if ( !is.null(local_recommendations_by_artist) ) {
+
+        local_recommendations_2 <- local_recommendations_by_artist %>%
+          mutate ( release_country_code = get_release_country(.data$external_ids.isrc),
+                   target_artists = TRUE ) %>%
+          select ( all_of (vars_to_select)) %>%
+          bind_rows (local_recommendations) %>%
+          ungroup()
+
+        if ( nrow(local_recommendations_2)>=n_rec ) {
+          return(sample_n(local_recommendations_2,size = n_rec))
+        }
+      } else {
+        # local_recommendations_by_artist is NULL
+        local_recommendations_2 <- local_recommendations
+      }
+    # end when something came up
     }
-  } else {
-    # recommended_by_artist_similarity did not result in any recommendation candidates
-    local_recommendations_2 <- local_recommendations
   }
 
   ### ----- genre based recommendations ----------------------------------
@@ -222,10 +230,12 @@ get_local_recommendations <- function(
 
   tracks_by_genre_similarity  <- do.call( rbind, tracks_by_genre_similarity )
 
-  local_recommendations_by_genre <- get_nearest_tracks(
-    user_playlist_info = user_playlist_info$user_playlist_tracks,
-    new_tracks         = tracks_by_genre_similarity,
-    n_rec              = n_rec )
+  if ( !is.null(tracks_by_genre_similarity)) {
+    local_recommendations_by_genre <- get_nearest_tracks(
+      user_playlist_info = user_playlist_info$user_playlist_tracks,
+      new_tracks         = tracks_by_genre_similarity,
+      n_rec              = n_rec )
+  }
 
   if ( !is.null(local_recommendations_by_genre ) ) {
     ## if the genre based recommendations were successful, add them to the the
