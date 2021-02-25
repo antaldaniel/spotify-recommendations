@@ -32,10 +32,10 @@ get_nearest_tracks <- function( user_tracks,
   ## Bind them and scale them ----------------------------------------------
 
   tracks <- bind_rows(user_tracks, new_tracks) %>%
-    select ( where(is.numeric) )
+    select ( vars_select_helpers$where (is.numeric) )
 
   scaled_new_tracks <- scale(new_tracks %>%
-                               select ( where (is.numeric) ))
+                               select ( vars_select_helpers$where (is.numeric) ))
 
   ## Cluster user tracks to n clusters, and use the cluster center for n_rec
   ## recommendations and not more.

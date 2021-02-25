@@ -5,7 +5,7 @@
 #' @importFrom dplyr bind_rows mutate filter select distinct
 #' @importFrom tidyselect all_of
 #' @importFrom purrr possibly
-#' @importFrom spotifyr get_spotify_access_token
+#' @importFrom spotifyr get_spotify_access_token get_artist_top_tracks
 #' @importFrom stats complete.cases
 #' @importFrom utils data
 #' @return A tibble of recommendations.
