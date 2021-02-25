@@ -223,9 +223,9 @@ get_local_recommendations <- function(
   tracks_by_genre_similarity  <- do.call( rbind, tracks_by_genre_similarity )
 
   local_recommendations_by_genre <- get_nearest_tracks(
-    user_tracks = user_playlist_info$user_playlist_tracks,
-    new_tracks = tracks_by_genre_similarity,
-    n_rec = n_rec)
+    user_playlist_info = user_playlist_info$user_playlist_tracks,
+    new_tracks         = tracks_by_genre_similarity,
+    n_rec              = n_rec )
 
   if ( !is.null(local_recommendations_by_genre ) ) {
     ## if the genre based recommendations were successful, add them to the the
