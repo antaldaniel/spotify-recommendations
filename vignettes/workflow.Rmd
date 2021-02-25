@@ -2,7 +2,7 @@
 title: "Recommendation Workflow"
 output: rmarkdown::html_vignette
 vignette: |
-  %\VignetteIndexEntry{Recommendation Workflow} %\VignetteEngine{knitr::rmarkdown} %\VignetteEncoding{UTF-8}
+  %\VignetteIndexEntry{Recommendation Workflow} %\VignetteEngine{knitr::knitr} %\VignetteEncoding{UTF-8}
 ---
 
 ```{r setup-vignette, include = FALSE}
@@ -29,7 +29,7 @@ slovakia_indie_playlist_id       <- "1E8vQ9Bt4bRKWm0NTzSMt2"
 slovakia_top_50_playlist_id      <- "6WrpeNyqtoq6PEDXyuamGt"
 sound_of_dutch_indie_playlist_id <- "2pSeH1YQCSICs2knjs7e5o"
 
-token  <- get_spotify_access_token()
+token  <- spotifyr::get_spotify_access_token()
 ```
 
 

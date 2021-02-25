@@ -5,7 +5,7 @@
 \title{Information about the artists on the user playlist}
 \arguments{
 \item{user_playlist_artists}{A user_playlist_artists data frame from
-\code{\link{user_playlist_info}}.}
+\code{\link{get_playlist_information}}.}
 }
 \description{
 An analysis of a user playlist that will serve as the basis of new recommendations.
