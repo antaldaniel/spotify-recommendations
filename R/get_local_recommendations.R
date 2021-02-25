@@ -7,6 +7,8 @@
 #' or \code{'both'}.
 #' @param limit Number of playlist items used for recommendation seed.
 #' @param silent Defaults to \code{TRUE}.
+##' @param authorization Defaults to \code{NULL} when
+#' \code{\link[spotifyr]{get_spotify_access_token}} is invoked.
 #' @param listen_local_artist_data If \code{NULL}, the functions try to load the data from the
 #' spotifyrecommendations package.
 #' @param local_genre_table_path If \code{NULL}, the functions try to load the data from the
@@ -17,7 +19,7 @@
 #' spotifyrecommendations package.
 #' @importFrom dplyr bind_rows ungroup filter select sample_n
 #' @importFrom tidyselect all_of any_of
-#' @importFrom spotifyr get_spotify_access_token
+#' @importFrom spotifyr get_spotify_access_token get_artist_audio_features
 #' @importFrom assertthat assert_that
 #' @return A tibble of recommendations.
 #' @export
@@ -50,7 +52,7 @@ get_local_recommendations <- function(
                   envir = environment() #default, not necessary parameter
       )
     } else {
-      data("listen_local_artists", package = 'spotifyrecommendations')
+      data("listen_local_artists", package = 'spotifyrecommendations', envir = environment())
     }
   }
 
@@ -123,7 +125,7 @@ get_local_recommendations <- function(
     if ( !is.null(artist_distance_data) ) {
       load_data ( "artist_distances", artist_distance_data )
     } else {
-      data("artist_distance_data", package = 'spotifyrecommendations')
+      data("artist_distance_data", package = 'spotifyrecommendations', envir = environment())
     }
   }
   message ( paste0("There are ", nrow(artist_distances), " artist distances defined.") )
@@ -178,7 +180,7 @@ get_local_recommendations <- function(
     if ( !is.null(artist_genre_table_path) ) {
       load_data ( "artist_genre_table", artist_genre_table_path )
     } else {
-      data("artist_genre_table_path", package = 'spotifyrecommendations')
+      data("artist_genre_table_path", package = 'spotifyrecommendations', envir = environment() )
     }
   }
 
@@ -186,11 +188,10 @@ get_local_recommendations <- function(
     if ( !is.null(local_genre_table_path) ) {
       load_data ( "local_genre_table", local_genre_table_path )
     } else {
-      data("local_genre_table_path", package = 'spotifyrecommendations')
+      data("local_genre_table_path", package = 'spotifyrecommendations',envir = environment() )
     }
 
   }
-
 
   user_artists_by_genre <- get_artist_genre(
     user_playlist_artists = user_playlist_info$user_playlist_artists
@@ -228,9 +229,9 @@ get_local_recommendations <- function(
       bind_rows (local_recommendations_2) %>%
       ungroup()
 
-    if ( nrow(local_recommendations_3)>=n_rec) {
+    if ( nrow(local_recommendations_3)>=n_rec ) {
       ## if the candidates are more than required, randomly select n_rec
-      return(sample_n(local_recommendations_3, size = n_rec))
+      return( sample_n(local_recommendations_3, size = n_rec) )
     }
   } else {
     ## if there were no genre-based recommendations, give whatever we have

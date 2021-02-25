@@ -36,6 +36,9 @@ or \code{'both'}.}
 
 \item{silent}{Defaults to \code{TRUE}.}
 
+\item{authorization}{Defaults to \code{NULL} when
+\code{\link[spotifyr]{get_spotify_access_token}} is invoked.}
+
 \item{listen_local_artist_data}{If \code{NULL}, the functions try to load the data from the
 spotifyrecommendations package.}
 

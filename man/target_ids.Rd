@@ -30,6 +30,9 @@ initial_recommendations(
 
 \item{n_rec}{Number of required recommendations. (Maximum value, may not be fulfilled.)}
 
+\item{authorization}{Defaults to \code{NULL} when
+\code{\link[spotifyr]{get_spotify_access_token}} is invoked.}
+
 \item{playlist_information}{A list received from A playlist queried by
 \code{{get_playlist_information}}.}
 

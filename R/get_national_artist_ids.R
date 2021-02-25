@@ -7,8 +7,6 @@
 #' @importFrom dplyr select filter distinct
 #' @importFrom tidyselect all_of
 #' @importFrom utils data
-#' @examples
-#' get_national_artist_ids ( national_identity = 'sk' )
 #' @return A character vector or artist IDs.
 #' @export
 

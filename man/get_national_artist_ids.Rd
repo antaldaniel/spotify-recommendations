@@ -15,6 +15,3 @@ A character vector or artist IDs.
 \description{
 Get unique tracks and unique artists from a playlist in a list.
 }
-\examples{
-get_national_artist_ids ( national_identity = 'sk' )
-}

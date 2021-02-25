@@ -8,6 +8,9 @@ get_recommendations_artists_all(artist_ids, authorization = NULL)
 }
 \arguments{
 \item{artist_ids}{Spotify Artist IDs}
+
+\item{authorization}{Defaults to \code{NULL} when
+\code{\link[spotifyr]{get_spotify_access_token}} is invoked.}
 }
 \description{
 Get Recommendations For All Artists

@@ -21,6 +21,9 @@ get_track_recommendations_artist(
 \item{target_release}{Defaults to \code{NULL}. The country of origin of the recommendation candidate tracks, if necessary.}
 
 \item{n_rec}{Number of required recommendations. (Maximum value, may not be fulfilled.)}
+
+\item{authorization}{Defaults to \code{NULL} when
+\code{\link[spotifyr]{get_spotify_access_token}} is invoked.}
 }
 \value{
 A tibble of recommendations.
