@@ -1,11 +1,11 @@
-#' @title Get Nearest Tracks
+#' Get Nearest Tracks
 #'
 #' Get recommendations based on genre.
 #'
-#' @param user_tracks A tibble created by \code{\link{ get_playlist_information}}.
+#' @param user_tracks A tibble created by \code{\link{get_playlist_information}}.
 #' @param new_tracks Tracks to limit.
 #' @inheritParams get_local_recommendations
-#' @importFrom spotifyr get_playlist_audio_features where
+#' @importFrom spotifyr get_playlist_audio_features
 #' @importFrom dplyr select filter distinct full_join left_join
 #' @importFrom dplyr sample_n bind_rows rename group_by
 #' @importFrom tidyselect vars_select_helpers
@@ -41,7 +41,7 @@ get_nearest_tracks <- function( user_tracks,
   ## recommendations and not more.
 
   user_track_clusters <- stats::kmeans(user_tracks %>%
-                                         select ( where (is.numeric) ),
+                                         select ( tidyselect::vars_select_helpers$where (is.numeric) ),  #workaround to reference where
                                        centers=n_rec, iter.max = 100, nstart = 1)
 
   closest_to_center <- function(centers,df,x) {

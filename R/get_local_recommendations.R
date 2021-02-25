@@ -209,14 +209,14 @@ get_local_recommendations <- function(
   local_recommendations_by_genre <- get_nearest_tracks(
     user_tracks = user_playlist_info$user_playlist_tracks,
     new_tracks = tracks_by_genre_similarity,
-    n = n_rec)
+    n_rec = n_rec)
 
   if ( !is.null(local_recommendations_by_genre ) ) {
     ## if the genre based recommendations were successful, add them to the the
     ## existing candidates
 
     local_recommendations_3 <- local_recommendations_by_genre  %>%
-      mutate ( release_country_code = get_release_country(external_ids.isrc),
+      mutate ( release_country_code = get_release_country(.data$external_ids.isrc),
                target_artists = TRUE ) %>%
       select ( all_of (vars_to_select)) %>%
       bind_rows (local_recommendations_2) %>%

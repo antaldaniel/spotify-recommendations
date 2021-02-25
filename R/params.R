@@ -31,3 +31,13 @@ NULL
 #' \code{\link{user_playlist_info}}.
 #' @name user_playlist_artists
 NULL
+
+
+#' Artist's Unique ID on Spotify
+#'
+#' An analysis of a user playlist that will serve as the basis of new recommendations.
+#'
+#' @param spotify_artist_id Artist's Unique ID on Spotify
+#' @name spotify_artist_id
+#' @rdname spotify_artist_id
+NULL

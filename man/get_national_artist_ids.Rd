@@ -2,9 +2,7 @@
 % Please edit documentation in R/get_national_artist_ids.R
 \name{get_national_artist_ids}
 \alias{get_national_artist_ids}
-\title{Get Slovak Artists IDs
-
-Get unique tracks and unique artists from a playlist in a list.}
+\title{Get Artists IDs For Target Nationality.}
 \usage{
 get_national_artist_ids(target_identity = "sk")
 }
@@ -15,8 +13,6 @@ get_national_artist_ids(target_identity = "sk")
 A character vector or artist IDs.
 }
 \description{
-Get Slovak Artists IDs
-
 Get unique tracks and unique artists from a playlist in a list.
 }
 \examples{

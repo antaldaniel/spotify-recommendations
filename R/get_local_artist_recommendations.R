@@ -46,7 +46,7 @@ get_local_artist_recommendations <- function(
 
   min_rec <- artist_distance_table  %>%
     filter ( distance == min(.data$distance,na.rm=TRUE) ) %>%
-    distinct ( recommendation ) %>%
+    distinct ( .data$recommendation ) %>%
     slice_sample (n = min(c(return_seed_size, nrow(.data))))
 
   # all( min_rec$recommendation %in% target_artist_ids )

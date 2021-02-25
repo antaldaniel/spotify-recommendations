@@ -4,6 +4,7 @@
 #'
 #' @param artists_by_genre A tibble created by \code{\link{get_artist_genre}}.
 #' @inheritParams get_local_recommendations
+#' @inheritParams spotify_artist_id
 #' @importFrom spotifyr get_playlist_audio_features
 #' @importFrom dplyr select filter distinct full_join left_join rename distinct_all
 #' @importFrom dplyr sample_n bind_rows rename group_by

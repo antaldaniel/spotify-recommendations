@@ -2,14 +2,12 @@
 % Please edit documentation in R/get_nearest_tracks.R
 \name{get_nearest_tracks}
 \alias{get_nearest_tracks}
-\title{Get Nearest Tracks
-
-Get recommendations based on genre.}
+\title{Get Nearest Tracks}
 \usage{
 get_nearest_tracks(user_tracks, new_tracks, n_rec = 5)
 }
 \arguments{
-\item{user_tracks}{A tibble created by \code{\link{ get_playlist_information}}.}
+\item{user_tracks}{A tibble created by \code{\link{get_playlist_information}}.}
 
 \item{new_tracks}{Tracks to limit.}
 
@@ -19,7 +17,5 @@ get_nearest_tracks(user_tracks, new_tracks, n_rec = 5)
 A character vector or artist IDs.
 }
 \description{
-Get Nearest Tracks
-
 Get recommendations based on genre.
 }

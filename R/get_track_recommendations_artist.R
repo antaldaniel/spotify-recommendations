@@ -1,12 +1,7 @@
-#' @title Get recommendations for an artist
+#' Get Recommendations for an Artist
 #'
-#' @param spotify_artist_id A vector of artist IDs
-#' @param target_nationality Defaults to \code{"sk"}
-#' @param target_release If recommendation should be limited to target,
-#' defaults to \code{NULL}
-#' @param n Number of recommended tracks needed.
-#' @param authorization Defaults to \code{NULL} when
-#' \code{get_spotify_access_token()} is invoked.
+#' @inheritParams spotify_artist_id
+#' @inheritParams get_local_recommendations
 #' @importFrom dplyr bind_rows mutate filter select distinct
 #' @importFrom tidyselect all_of
 #' @importFrom purrr possibly
@@ -21,16 +16,15 @@ get_track_recommendations_artist <- function (
      user_playlist_info,
      target_nationality = "sk",
      target_release = NULL,
-     n = 5,
+     n_rec = 5,
      authorization = NULL) {
 
   if (is.null(authorization)) authorization <- get_spotify_access_token()
-  . <- target_nationality <- external_ids.isrc <- release_country <- NULL
 
   data("listen_local_artists", envir=environment())
 
   if ( !is.null(target_nationality) ) {
-    target_artists <- get_national_artist_ids ( target_nationality )
+    target_artists <- get_national_artist_ids ( .data$target_nationality )
   }
 
   recs <- get_recommendations_artists_all(artist_ids = spotify_artist_id )
@@ -42,6 +36,7 @@ get_track_recommendations_artist <- function (
                                         authorization = authorization)
 
     message ( artist_id )
+
     fn_detect_artists <- function(x) {
       ifelse ( any (x %in% target_artists), TRUE, FALSE)
     }
@@ -52,8 +47,8 @@ get_track_recommendations_artist <- function (
   if (!is.null(target_release)) {
 
       top_tracks <- top_tracks %>% mutate (
-        release_country = get_release_country(external_ids.isrc)) %>%
-        filter ( tolower(release_country) == tolower(target_release)) %>%
+        release_country = get_release_country(.data$external_ids.isrc)) %>%
+        filter ( tolower(.data$release_country) == tolower(target_release) ) %>%
         select ( -all_of("release_country") )
     }
 
@@ -77,18 +72,18 @@ get_track_recommendations_artist <- function (
 
 
 
-  tmp <- lapply ( sample ( spotify_artist_id, n ), get_top_tracks)
+  tmp <- lapply ( sample ( spotify_artist_id, n_rec ), get_top_tracks)
 
   recommendations <- do.call ( rbind, tmp ) %>%
-    distinct ( external_ids.isrc, .keep_all = TRUE ) %>%
-    mutate ( release_country_code = get_release_country(external_ids.isrc),
+    distinct ( .data$external_ids.isrc, .keep_all = TRUE ) %>%
+    mutate ( release_country_code = get_release_country(.data$external_ids.isrc),
              )
 
   recommendations %>%
       mutate (
-        target_artists = ifelse (is.null(target_nationality),
+        target_artists = ifelse (is.null(.data$target_nationality),
                                      TRUE,
-                                     spotify_artist_id %in% get_national_artist_ids(target_nationlity))
+                                     spotify_artist_id %in% get_national_artist_ids(.data$target_nationlity))
       )
 
 }
