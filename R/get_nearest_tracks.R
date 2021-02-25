@@ -4,7 +4,7 @@
 #'
 #' @param user_tracks A tibble created by \code{\link{ get_playlist_information}}.
 #' @param new_tracks Tracks to limit.
-#' @param n Number of recommendations needed
+#' @inheritParams get_local_recommendations
 #' @importFrom spotifyr get_playlist_audio_features
 #' @importFrom dplyr select filter distinct full_join left_join
 #' @importFrom dplyr sample_n bind_rows rename group_by
@@ -16,7 +16,7 @@
 
 get_nearest_tracks <- function( user_tracks,
                                 new_tracks,
-                                n = 5 ) {
+                                n_rec = 5 ) {
 
   ## subset the data frames ------------------------------------------
   user_tracks <- user_tracks %>%
@@ -51,7 +51,7 @@ get_nearest_tracks <- function( user_tracks,
   }
 
   ## result vector defined -------------------------------------------
-  nearest_tracks <- vector (mode = 'integer', length = n)
+  nearest_tracks <- vector (mode = 'integer', length = n_rec)
 
   ## replace till unique, i.e. if track already recommended, recommend
   ## something else till n unique tracks are recommended  -------------

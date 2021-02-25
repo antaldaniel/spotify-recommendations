@@ -1,7 +1,7 @@
 #' @title Get Recommendations For All Artists
 #'
 #' @param artist_ids Spotify Artist IDs
-#' @param authorization Authorization token
+#' @inheritParams get_local_recommendations
 #' @importFrom purrr map_df
 #' @importFrom spotifyr get_recommendations
 #' @export
@@ -16,8 +16,9 @@ get_recommendations_artists_all <- function (
     start <- i
     end <- ifelse(i + 4 > vec_length, vec_length, i + 4)
     seeds <- artist_ids[c(start:end)]
-    recs <- spotifyr::get_recommendations( limit = (end + 1 - start),
-                                 seed_artists = seeds )
+    recs <- spotifyr::get_recommendations(
+      limit = (end + 1 - start),
+      seed_artists = seeds )
     recs
   }
 

@@ -1,14 +1,12 @@
-#' @title Get Slovak Artists IDs
+#' Get Slovak Artists IDs
 #'
 #' Recommend local artists from user_playlist_artist data frame.
 #'
 #' @param user_playlist_artists A \code{user_playlist_artists} part from the
 #' the list received from A list received from
 #' \code{\link{get_playlist_information}}.
-#' @param n_rec Number of required recommendations (maximum value)
-#' @param authorization Defaults to \code{NULL} when
-#' \code{get_spotify_access_token()} is invoked.
-#' @param target_ids A character vector of the suitable recommendation candidates.
+#' @inheritParams get_local_recommendations
+#' @rdname target_ids
 #' @importFrom spotifyr get_playlist_audio_features
 #' @importFrom dplyr select filter distinct anti_join sample_n arrange
 #' @importFrom dplyr arrange rename left_join group_by slice_head slice_sample slice_max

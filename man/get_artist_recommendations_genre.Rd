@@ -11,7 +11,7 @@ get_artist_recommendations_genre(artists_by_genre, target_nationality = "sk")
 \arguments{
 \item{artists_by_genre}{A tibble created by \code{\link{get_artist_genre}}.}
 
-\item{target_nationality}{One of \code{'cz'} or \code{'sk'}.}
+\item{target_nationality}{Defaults to \code{"sk"}. The nationality id of the recommendation candidate artists, if necessary.}
 }
 \value{
 A character vector or artist IDs.

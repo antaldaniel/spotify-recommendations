@@ -2,13 +2,10 @@
 #'
 #' This is the wrapper function to the Listen Local Demo recommendation system.
 #'
-#' @param playlist_id A Spotify playlist id.
-#' @param target_nationality Defaults to \code{"sk"}
-#' @param target_release Defaults to \code{NULL}
+#' @rdname recparam
 #' @param recommendation_type Defaults to \code{'artists'}, can be \code{'release'}
 #' or \code{'both'}.
 #' @param limit Number of playlist items used for recommendation seed.
-#' @param n number of required target country recommendations
 #' @param authorization Defaults to \code{NULL} when
 #' \code{\link[spotifyr]{get_spotify_access_token()}} is invoked.
 #' @param silent Defaults to \code{TRUE}.
@@ -27,7 +24,7 @@ get_local_recommendations <- function(
     target_release = NULL,
     recommendation_type = "artists",
     limit = 20,
-    n = 4,
+    n_rec = 4,
     silent = TRUE,
     authorization = NULL,
     listen_local_artist_data = 'not_included/listen_local_artists.rds',
@@ -109,7 +106,7 @@ get_local_recommendations <- function(
   local_recommendations <- local_recommendations %>%
     select ( any_of(vars_to_select) )
 
-  if ( nrow(local_recommendations)>=n ) {  #should return n
+  if ( nrow(local_recommendations)>=n_rec ) {  #should return n_rec number recommendations
     return(local_recommendations)
   }
 
@@ -131,7 +128,7 @@ get_local_recommendations <- function(
   recommended_by_artist_similarity <- get_local_artist_recommendations(
     user_playlist_artists = users_artists,
     target_ids = target_artist_ids,
-    n_rec = n,
+    n_rec = n_rec,
     authorization = authorization
   )
 
@@ -162,8 +159,8 @@ get_local_recommendations <- function(
       bind_rows (local_recommendations) %>%
       ungroup()
 
-    if ( nrow(local_recommendations_2)>=n) {
-      return(sample_n(local_recommendations_2,size = n))
+    if ( nrow(local_recommendations_2)>=n_rec) {
+      return(sample_n(local_recommendations_2,size = n_rec))
     }
   } else {
     local_recommendations_2 <- local_recommendations_by_artist
@@ -214,7 +211,7 @@ get_local_recommendations <- function(
   local_recommendations_by_genre <- get_nearest_tracks(
     user_tracks = user_playlist_info$user_playlist_tracks,
     new_tracks = tracks_by_genre_similarity,
-    n = n)
+    n = n_rec)
 
   if ( !is.null(local_recommendations_by_genre ) ) {
     ## if the genre based recommendations were successful, add them to the the
@@ -229,7 +226,7 @@ get_local_recommendations <- function(
 
     if ( nrow(local_recommendations_3)>=n) {
       ## if the candidates are more than required, randomly select n
-      return(sample_n(local_recommendations_3,size = n))
+      return(sample_n(local_recommendations_3,size = n_rec))
     }
   } else {
     ## if there were no genre-based recommendations, give whatever we have

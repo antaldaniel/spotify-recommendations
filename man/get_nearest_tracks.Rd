@@ -6,14 +6,14 @@
 
 Get recommendations based on genre.}
 \usage{
-get_nearest_tracks(user_tracks, new_tracks, n = 5)
+get_nearest_tracks(user_tracks, new_tracks, n_rec = 5)
 }
 \arguments{
 \item{user_tracks}{A tibble created by \code{\link{ get_playlist_information}}.}
 
 \item{new_tracks}{Tracks to limit.}
 
-\item{n}{Number of recommendations needed}
+\item{n_rec}{Number of required recommendations. (Maximum value, may not be fulfilled.)}
 }
 \value{
 A character vector or artist IDs.

@@ -5,10 +5,9 @@
 #'
 #' @param playlist_information A list received from A playlist queried by
 #' \code{{get_playlist_information}}.
-#' @param target_ids Spotify artists ids from the targeted repertoire.
-#' @param target_release The targetted country code of the sound recordings,
+#' @inheritParams get_local_recommendations
+#' @rdname target_ids
 #' @param limit How many items are used for the initial recommendation.
-#' @param authorization Defaults to \code{NULL} when #' \code{get_spotify_access_token()} is invoked.
 #' @importFrom dplyr bind_rows sample_n ungroup mutate bind_rows
 #' @importFrom spotifyr get_recommendations_all
 #' @importFrom purrr possibly
