@@ -33,10 +33,10 @@ get_local_artist_recommendations <- function(
   }
 
   artist_distance_table <- artist_distances %>%
-    filter ( spotify_artist_id %in% user_playlist_artists ) %>%
-    filter ( recommendation %in% target_ids) %>%
+    filter ( .data$spotify_artist_id %in% user_playlist_artists ) %>%
+    filter ( .data$recommendation %in% target_ids) %>%
     filter ( !is.na(.data$recommendation) ) %>%
-    arrange ( distance )
+    arrange ( .data$distance )
 
   return_seed_size <- ifelse ( test = nrow(artist_distance_table)>n_rec,
                                yes  = n_rec,

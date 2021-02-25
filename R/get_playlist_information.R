@@ -77,12 +77,13 @@ get_playlist_information <- function( playlist_id = NULL,
     user_playlist_features$track.external_ids.isrc)
 
   user_playlist_artists <- do.call ( rbind,
-                                     user_playlist_features$track.album.artists)
+                                     user_playlist_features$track.album.artists
+                                     )
 
   unique_playlist_artists <-  user_playlist_artists  %>%
-    group_by ( id ) %>%
+    group_by ( .data$id ) %>%
     count() %>%
-    arrange ( n )
+    arrange ( .data$n )
 
   unique_playlist_tracks <- user_playlist_features
 
