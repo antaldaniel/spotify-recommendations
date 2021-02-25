@@ -45,7 +45,6 @@ get_track_recommendations_artist <- function (
   if (length ( top_tracks )==0) return(top_tracks)
 
   if (!is.null(target_release)) {
-
       top_tracks <- top_tracks %>% mutate (
         release_country = get_release_country(.data$external_ids.isrc)) %>%
         filter ( tolower(.data$release_country) == tolower(target_release) ) %>%
