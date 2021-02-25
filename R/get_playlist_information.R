@@ -5,10 +5,13 @@
 #' @param playlist_id A single Spotify playlist id
 #' @param playlist A playlist querried by  \code{\link[spotifyr]{get_playlist}}.
 #' @inheritParams get_local_recommendations
-#' @importFrom purrr map_df possibly
+#' @importFrom purrr map_df
 #' @importFrom spotifyr get_playlist_audio_features
-#' @importFrom dplyr count group_by arrange bind_cols
+#' @importFrom dplyr count group_by arrange bind_cols case_when
 #' @return A list of unique tracks and unique artists from a playlist.
+#' @examples
+#' # Get a pre-saved playlist
+#' get_playlist_information('sound_of_dutch_indie_playlist')
 #' @export
 
 get_playlist_information <- function( playlist_id = NULL,
@@ -17,10 +20,7 @@ get_playlist_information <- function( playlist_id = NULL,
 
   if (is.null(authorization)) authorization <- get_spotify_access_token()
 
-  if  (!is.null(playlist_id)) {
-
-    possibly_get_playlist <- purrr::possibly(
-      .f = spotifyr::get_playlist, NULL)
+  if  ( !is.null(playlist_id) ) {
 
     user_playlist <- possibly_get_playlist(playlist_id = playlist_id,
                                            authorization = authorization )
@@ -28,6 +28,12 @@ get_playlist_information <- function( playlist_id = NULL,
       warning("User playlist could not be read.")
       return(NULL)
     }
+
+    playlist_id <- case_when (
+      playlist_id == 'sound_of_dutch_indie_playlist' ~,
+      TRUE ~ playlist_id
+    )
+
     ## retrieving the audio features of the list
     user_playlist_features <- spotifyr::get_playlist_audio_features(
       playlist_uris = playlist_id,

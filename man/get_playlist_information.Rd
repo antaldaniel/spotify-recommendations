@@ -24,3 +24,7 @@ A list of unique tracks and unique artists from a playlist.
 \description{
 Get unique tracks and unique artists from a playlist in a list.
 }
+\examples{
+# Get a pre-saved playlist
+get_playlist_information('sound_of_dutch_indie_playlist')
+}
