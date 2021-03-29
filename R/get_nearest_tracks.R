@@ -22,6 +22,10 @@ get_nearest_tracks <- function( user_playlist_info,
     user_playlist_info <- user_playlist_info$user_playlist_tracks
   }
 
+  if ( is.null(new_tracks)) {
+    stop("No tracks to select from in new_tracks.")
+  }
+
   ## subset the data frames ------------------------------------------
   user_tracks <- user_playlist_info %>%
     select ( any_of(c("track.id","track_id",  "danceability","energy", "key",
@@ -36,10 +40,10 @@ get_nearest_tracks <- function( user_playlist_info,
   ## Bind them and scale them ----------------------------------------------
 
   tracks <- bind_rows(user_tracks, new_tracks) %>%
-    select ( vars_select_helpers$where (is.numeric) )
+    select ( tidyselect::vars_select_helpers$where (is.numeric) )
 
   scaled_new_tracks <- scale(new_tracks %>%
-                               select ( vars_select_helpers$where(is.numeric) )
+                               select ( tidyselect::vars_select_helpers$where(is.numeric) )
                              )
 
   ## Cluster user tracks to n clusters, and use the cluster center for n_rec

@@ -10,7 +10,8 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
-if ( file.exists("not_included/daniel_env.R")) {
+if ( file.exists("not_included/daniel_env.R") ) {
+  message("Loading environment.")
   source ("not_included/daniel_env.R")
   listen_local_artists <- readRDS("not_included/listen_local_artists.rds")
   artist_distances     <- readRDS("not_included/artist_distances.rds")
@@ -18,6 +19,7 @@ if ( file.exists("not_included/daniel_env.R")) {
   artist_genre_table   <- readRDS("not_included/artist_genre_table.rds")
 } else {
   source ("../not_included/daniel_env.R")
+  message("Loading environment.")
   listen_local_artists <- readRDS("../not_included/listen_local_artists.rds")
   artist_distances     <- readRDS("../not_included/artist_distances.rds")
   local_genre_table    <- readRDS("../not_included/local_genre_table.rds")
@@ -137,8 +139,13 @@ new_artists_spotify_artist_id <- get_local_artist_recommendations(
 Then the new recommended artists' nearest tracks are defined:
 
 ```{r get_local_artist_recommendations}
-tracks_by_artist_similarity <- lapply ( recommended_by_artist_similarity,
-                                        purrr::possibly(get_artist_audio_features, NULL))
+tracks_by_artist_similarity <- lapply ( 
+  recommended_by_artist_similarity,
+  FUN =  purrr::possibly(get_artist_audio_features, NULL))
+
+if (is.null(tracks_by_artist_similarity )) {
+  warning("Artist by similarity was not successful.")
+}
 
 tracks_by_artist_similarity <- do.call( rbind, tracks_by_artist_similarity  )
 
@@ -164,6 +171,8 @@ recommended_by_genre <- get_artist_recommendations_genre(
     artists_by_genre = user_artists_by_genre,
     target_nationality = 'sk'
   )
+
+get_artist_audio_features(artist ="5Sdehxs56D9zXmPdGXKWEF")
 
 tracks_by_genre_similarity <- lapply (
     recommended_by_genre,
